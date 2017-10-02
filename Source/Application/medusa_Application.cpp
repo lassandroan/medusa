@@ -217,14 +217,14 @@ bool medusa::Application::perform(const juce::ApplicationCommandTarget::Invocati
     switch (info.commandID)
     {
 
-        case CommandIDs::open:       createNewDocument();          break;
-        case CommandIDs::save:       saveDocument(activeWindow);   break;
-        case CommandIDs::saveAs:     saveDocumentAs(activeWindow); break;
-        case CommandIDs::close:      closeDocument(activeWindow);  break;
+        case CommandIDs::open:       createNewDocument();                 break;
+        case CommandIDs::save:       saveDocument(activeWindow);          break;
+        case CommandIDs::saveAs:     saveDocumentAs(activeWindow);        break;
+        case CommandIDs::close:      activeWindow->closeButtonPressed();  break;
 
-        case CommandIDs::zoomIn:     activeWindow->zoomIn();       break;
-        case CommandIDs::zoomOut:    activeWindow->zoomOut();      break;
-        case CommandIDs::actualSize: activeWindow->zoomReset();    break;
+        case CommandIDs::zoomIn:     activeWindow->zoomIn();              break;
+        case CommandIDs::zoomOut:    activeWindow->zoomOut();             break;
+        case CommandIDs::actualSize: activeWindow->zoomReset();           break;
 
         default:                    return juce::JUCEApplication::perform(info);
 
