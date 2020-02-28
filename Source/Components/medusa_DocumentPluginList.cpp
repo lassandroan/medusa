@@ -75,19 +75,21 @@ void medusa::DocumentPluginList::backgroundClicked(const juce::MouseEvent& e)
         }
 
         juce::PopupMenu m;
-        application.knownPluginList.addToMenu(m, juce::KnownPluginList::sortByManufacturer);
-        const int choice = m.show();
-        int pluginIndex = application.knownPluginList.getIndexChosenByMenu(choice);
-        juce::PluginDescription* pluginDescription = application.knownPluginList.getType(pluginIndex);
+        const auto types = application.knownPluginList.getTypes();
 
-        if (pluginDescription)
+        juce::KnownPluginList::addToMenu(m, types, juce::KnownPluginList::sortByManufacturer);
+        const int pluginIndex = juce::KnownPluginList::getIndexChosenByMenu(types, m.show());
+
+        if (pluginIndex >= 0 && pluginIndex < types.size())
         {
-
-            const auto xml = pluginDescription->createXml();
+            const auto pluginDescription = types[pluginIndex];
+            const auto xml = pluginDescription.createXml();
             std::cout << xml->toString() << std::endl;
 
             juce::String error;
-            auto plugin = formatManager.createPluginInstance(*pluginDescription, 44100, 512, error);
+            auto plugin = formatManager.createPluginInstance(
+                pluginDescription, 44100, 512, error
+            );
 
             if (plugin.get())
             {
