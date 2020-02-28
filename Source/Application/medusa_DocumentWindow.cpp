@@ -20,10 +20,18 @@
 #include "medusa_Application.h"
 #include "medusa_CommandIDs.h"
 
-medusa::DocumentWindow::DocumentWindow(const juce::String& name, const juce::File& file, juce::Image image)
-                        : juce::DocumentWindow(name, juce::Colours::black, 7), documentFile(file), imageProcessor(*this)
+medusa::DocumentWindow::DocumentWindow(
+    const juce::String& name,
+    const juce::File& file,
+    juce::Image image) :
+        juce::DocumentWindow(
+            name,
+            juce::Colours::black,
+            7
+        ),
+        documentFile(file),
+        imageProcessor(*this)
 {
-
     setUsingNativeTitleBar(true);
 
     documentImage = image.convertedToFormat(juce::Image::RGB);
@@ -33,141 +41,122 @@ medusa::DocumentWindow::DocumentWindow(const juce::String& name, const juce::Fil
     setResizable(true, false);
 
     dirty = false;
-
 }
 
-medusa::DocumentWindow::~DocumentWindow()
+void
+medusa::DocumentWindow::closeButtonPressed()
 {
-
-}
-
-void medusa::DocumentWindow::closeButtonPressed()
-{
-
     medusa::Application& application = medusa::Application::getApplication();
 
     if (dirty)
     {
-
-        int choice = juce::NativeMessageBox::showYesNoCancelBox(juce::AlertWindow::WarningIcon, "Image has been modified", "Would you like to save this image?");
+        const int choice = juce::NativeMessageBox::showYesNoCancelBox(
+            juce::AlertWindow::WarningIcon,
+            "Image has been modified",
+            "Would you like to save this image?"
+        );
 
         if (choice == 0)
-        {
-
             return;
-
-        }
         else if (choice == 1)
-        {
-
             application.saveDocument(this);
-
-        }
-
     }
 
     application.closeDocument(this);
-
 }
 
-juce::Image& medusa::DocumentWindow::getDocumentImage()
+juce::Image&
+medusa::DocumentWindow::getDocumentImage()
 {
-
     return documentImage;
-
 }
 
-const juce::File& medusa::DocumentWindow::getDocumentFile()
+const juce::File&
+medusa::DocumentWindow::getDocumentFile()
 {
-
     return documentFile;
-
 }
 
-medusa::ImageProcessor& medusa::DocumentWindow::getDocumentProcessor()
+medusa::ImageProcessor&
+medusa::DocumentWindow::getDocumentProcessor()
 {
-
     return imageProcessor;
-
 }
 
-void medusa::DocumentWindow::setDocumentStatus(bool isDirty)
+void
+medusa::DocumentWindow::setDocumentStatus(
+    bool isDirty)
 {
-
     dirty = isDirty;
-
 }
 
-bool medusa::DocumentWindow::isDocumentDirty()
+bool
+medusa::DocumentWindow::isDocumentDirty()
 {
-
     return dirty;
-
 }
 
-void medusa::DocumentWindow::zoomIn()
+void
+medusa::DocumentWindow::zoomIn()
 {
-
-
-    medusa::DocumentComponent* c = dynamic_cast<medusa::DocumentComponent*>(getContentComponent());
+    auto* const c = dynamic_cast<medusa::DocumentComponent*>(
+        getContentComponent()
+    );
     c->imageViewport->zoomContainerIn();
     c->imageViewport->repaint();
-
 }
 
-void medusa::DocumentWindow::zoomOut()
+void
+medusa::DocumentWindow::zoomOut()
 {
-
-    medusa::DocumentComponent* c = dynamic_cast<medusa::DocumentComponent*>(getContentComponent());
+    auto* const c = dynamic_cast<medusa::DocumentComponent*>(
+        getContentComponent()
+    );
     c->imageViewport->zoomContainerOut();
     c->imageViewport->repaint();
-
 }
 
-void medusa::DocumentWindow::zoomReset()
+void
+medusa::DocumentWindow::zoomReset()
 {
-
-    medusa::DocumentComponent* c = dynamic_cast<medusa::DocumentComponent*>(getContentComponent());
+    auto* const c = dynamic_cast<medusa::DocumentComponent*>(
+        getContentComponent()
+    );
     c->imageViewport->resetContainer();
     c->imageViewport->repaint();
-    
 }
 
-bool medusa::DocumentWindow::keyPressed(const juce::KeyPress& k)
+bool
+medusa::DocumentWindow::keyPressed(
+    const juce::KeyPress& k)
 {
-
     if (k.getKeyCode() == juce::KeyPress::spaceKey)
     {
-
         updateImage();
 
         return true;
-
     }
 
     return false;
-
 }
 
-void medusa::DocumentWindow::resized()
+void
+medusa::DocumentWindow::resized()
 {
-
-    if (juce::Component* c = getContentComponent())
+    if (auto* const c = getContentComponent())
         c->setSize(getWidth(), getHeight());
-
 }
 
-void medusa::DocumentWindow::updateImage()
+void
+medusa::DocumentWindow::updateImage()
 {
-
     imageProcessor.processImage(documentImage);
     dirty = true;
-
 }
 
-void medusa::DocumentWindow::refreshImage()
+void
+medusa::DocumentWindow::refreshImage()
 {
-
     std::cout << "Refreshing image" << std::endl;
 
     juce::MessageManagerLock lock(&imageProcessor);
@@ -175,5 +164,4 @@ void medusa::DocumentWindow::refreshImage()
     imageProcessor.signalThreadShouldExit();
 
     repaint();
-
 }

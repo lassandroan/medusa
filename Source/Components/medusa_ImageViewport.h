@@ -25,23 +25,20 @@ namespace medusa
 
 class ImageViewport : public juce::Component
 {
-
 public:
-
-    ImageViewport(juce::Image& image);
+    ImageViewport(juce::Image&);
 
     void zoomContainerIn();
     void zoomContainerOut();
     void resetContainer();
 
 private:
+    void mouseDown     (const juce::MouseEvent&) override;
+    void mouseDrag     (const juce::MouseEvent&) override;
+    void mouseWheelMove(const juce::MouseEvent&,
+                        const juce::MouseWheelDetails&) override;
 
-    void mouseDown(const juce::MouseEvent& e) override;
-    void mouseDrag(const juce::MouseEvent& e) override;
-    void mouseWheelMove(const juce::MouseEvent& e, const juce::MouseWheelDetails& w) override;
-
-    void paint(juce::Graphics& g) override;
-    void resized() override;
+    void paint(juce::Graphics&) override;
 
     juce::ComponentDragger dragger;
 
@@ -49,7 +46,6 @@ private:
     juce::Image& viewportImage;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ImageViewport);
-
 };
 
 }

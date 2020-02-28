@@ -18,144 +18,126 @@
 
 #include "medusa_ImageViewport.h"
 
-medusa::ImageViewport::ImageViewport(juce::Image& image) : viewportImage(image)
+medusa::ImageViewport::ImageViewport(
+    juce::Image& image) :
+        viewportImage(image)
 {
-
     setInterceptsMouseClicks(true, false);
 
-    int width  = viewportImage.getWidth();
-    int height = viewportImage.getHeight();
-
-    imageContainer.setSize(width, height);
-    imageContainer.setTopLeftPosition(0, 0);
+    imageContainer.setBounds(viewportImage.getBounds());
     addChildComponent(imageContainer);
 
-    setSize(width, height);
-
+    setBounds(viewportImage.getBounds());
 }
 
-void medusa::ImageViewport::zoomContainerIn()
+void
+medusa::ImageViewport::zoomContainerIn()
 {
+    const int width  = imageContainer.getWidth();
+    const int height = imageContainer.getHeight();
 
-    int width  = imageContainer.getWidth();
-    int height = imageContainer.getHeight();
+    const int maxWidth  = viewportImage.getWidth() * 4;
+    const int maxHeight = viewportImage.getHeight() * 4;
 
-    int maxWidth  = viewportImage.getWidth() * 4;
-    int maxHeight = viewportImage.getHeight() * 4;
-
-    if (imageContainer.getWidth() * 2 >= maxWidth || imageContainer.getHeight() * 2 >= maxHeight)
+    if (imageContainer.getWidth()  * 2 >= maxWidth
+    ||  imageContainer.getHeight() * 2 >= maxHeight)
         return;
 
-    juce::Point<int> centre = imageContainer.getPosition().translated(width / 2, height / 2);
+    const auto centre = imageContainer
+        .getPosition()
+        .translated(width / 2, height / 2);
+
     imageContainer.setSize(width * 2, height * 2);
     imageContainer.setCentrePosition(centre);
-
 }
 
-void medusa::ImageViewport::zoomContainerOut()
+void
+medusa::ImageViewport::zoomContainerOut()
 {
-
     int width  = imageContainer.getWidth();
     int height = imageContainer.getHeight();
 
     int minWidth  = viewportImage.getWidth() / 4;
     int minHeight = viewportImage.getHeight() / 4;
 
-    if (imageContainer.getWidth() / 2 <= minWidth || imageContainer.getHeight() / 2 <= minHeight)
+    if (imageContainer.getWidth()  / 2 <= minWidth
+    ||  imageContainer.getHeight() / 2 <= minHeight)
         return;
 
-    juce::Point<int> centre = imageContainer.getPosition().translated(width / 2, height / 2);
+    const auto centre = imageContainer
+        .getPosition()
+        .translated(width / 2, height / 2);
+
     imageContainer.setSize(width / 2, height / 2);
     imageContainer.setCentrePosition(centre);
-
 }
 
-void medusa::ImageViewport::resetContainer()
+void
+medusa::ImageViewport::resetContainer()
 {
-
-    imageContainer.centreWithSize(viewportImage.getWidth(), viewportImage.getHeight());
-
+    imageContainer.centreWithSize(
+        viewportImage.getWidth(),
+        viewportImage.getHeight()
+    );
 }
 
-void medusa::ImageViewport::mouseDown(const juce::MouseEvent& e)
+void
+medusa::ImageViewport::mouseDown(const juce::MouseEvent& e)
 {
-
     dragger.startDraggingComponent(&imageContainer, e);
-
 }
 
 void medusa::ImageViewport::mouseDrag(const juce::MouseEvent& e)
 {
-
     dragger.dragComponent(&imageContainer, e, nullptr);
     repaint();
-
 }
 
 void medusa::ImageViewport::mouseWheelMove(const juce::MouseEvent& e, const juce::MouseWheelDetails& w)
 {
-
     if (e.mods.isCommandDown())
     {
-
         int maxWidth  = viewportImage.getWidth() * 4;
         int maxHeight = viewportImage.getHeight() * 4;
         int minWidth  = viewportImage.getWidth() / 4;
         int minHeight = viewportImage.getHeight() / 4;
 
-        float diff = (1.0f - w.deltaY);
+        const float diff = (1.0f - w.deltaY);
 
         if (diff < 1.0f)
         {
-
-            if (imageContainer.getWidth() * diff <= minWidth || imageContainer.getHeight() * diff <= minHeight)
+            if (imageContainer.getWidth()  * diff <= minWidth
+            ||  imageContainer.getHeight() * diff <= minHeight)
                 return;
-
         }
         else
         {
-
-            if (imageContainer.getWidth() * diff >= maxWidth || imageContainer.getHeight() * diff >= maxHeight)
+            if (imageContainer.getWidth()  * diff >= maxWidth
+            ||  imageContainer.getHeight() * diff >= maxHeight)
                 return;
-
         }
 
-        imageContainer.setSize(imageContainer.getWidth() * diff, imageContainer.getHeight() * diff);
-
+        imageContainer.setSize(
+            imageContainer.getWidth() * diff,
+            imageContainer.getHeight() * diff
+        );
     }
     else
     {
-
-        imageContainer.setTopLeftPosition
-        (
-            imageContainer.getPosition().translated(-w.deltaX * 128, -w.deltaY * 128)
+        imageContainer.setTopLeftPosition(
+            imageContainer
+                .getPosition()
+                .translated(-w.deltaX * 128, -w.deltaY * 128)
         );
-
     }
 
     repaint();
-
 }
 
-void medusa::ImageViewport::paint(juce::Graphics& g)
+void
+medusa::ImageViewport::paint(
+    juce::Graphics& g)
 {
-
     g.setImageResamplingQuality(juce::Graphics::lowResamplingQuality);
-
-    g.drawImage
-    (
-        viewportImage,
-        imageContainer.getX(), imageContainer.getY(),
-        imageContainer.getWidth(), imageContainer.getHeight(),
-        0, 0,
-        viewportImage.getWidth(), viewportImage.getHeight()
-    );
-
-}
-
-void medusa::ImageViewport::resized()
-{
-
-    
-
+    g.drawImage(viewportImage, imageContainer.getBounds().toFloat());
 }

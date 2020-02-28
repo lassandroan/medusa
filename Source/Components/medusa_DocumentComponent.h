@@ -26,19 +26,16 @@
 namespace medusa
 {
 
-    class DocumentWindow;
+class DocumentWindow;
 
 class DocumentComponent : public juce::Component
 {
-
     friend medusa::DocumentWindow;
 
 public:
-
     DocumentComponent(DocumentWindow& parent);
 
 private:
-
     void resized() override;
 
     std::unique_ptr<ImageViewport> imageViewport;
@@ -49,7 +46,6 @@ private:
     medusa::DocumentWindow& parentWindow;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(DocumentComponent)
-
 };
 
 }

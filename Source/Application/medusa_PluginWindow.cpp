@@ -19,24 +19,28 @@
 #include "medusa_PluginWindow.h"
 #include "medusa_Application.h"
 
-medusa::PluginWindow::PluginWindow(medusa::DocumentWindow& parent, juce::AudioProcessorEditor* content) : juce::DocumentWindow(content->processor.getName(), juce::Colours::black, 4), parentWindow(parent)
+medusa::PluginWindow::PluginWindow(
+    medusa::DocumentWindow& parent,
+    juce::AudioProcessorEditor* content) :
+        juce::DocumentWindow(
+            content->processor.getName(),
+            juce::Colours::black,
+            4
+        ),
+        parentWindow(parent)
 {
-
     setUsingNativeTitleBar(true);
     setContentOwned(content, true);
     pluginEditor.reset(content);
 }
 
-void medusa::PluginWindow::closeButtonPressed()
+void
+medusa::PluginWindow::closeButtonPressed()
 {
-
     medusa::Application::getApplication().closePlugin(this);
-
 }
 
 medusa::DocumentWindow* medusa::PluginWindow::getParentWindow()
 {
-
     return &parentWindow;
-
 }

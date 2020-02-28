@@ -28,11 +28,14 @@ namespace medusa
 
 class DocumentWindow : public juce::DocumentWindow
 {
-
 public:
+    DocumentWindow(
+        const juce::String& name,
+        const juce::File& documentFile,
+        juce::Image image
+    );
 
-    DocumentWindow(const juce::String& name, const juce::File& documentFile, juce::Image image);
-    ~DocumentWindow();
+    ~DocumentWindow() = default;
 
     void closeButtonPressed() override;
 
@@ -52,7 +55,6 @@ public:
     void refreshImage();
 
 private:
-
     bool keyPressed(const juce::KeyPress& k) override;
 
     void resized() override;
@@ -64,7 +66,6 @@ private:
     ImageProcessor imageProcessor;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(DocumentWindow)
-
 };
 
 }

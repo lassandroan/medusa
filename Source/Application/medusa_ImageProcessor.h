@@ -23,15 +23,12 @@
 namespace medusa
 {
 
-    class DocumentWindow;
+class DocumentWindow;
 
 class ImageProcessor : public juce::AudioProcessorGraph,
                        public juce::Thread
-
 {
-
 public:
-
     ImageProcessor(medusa::DocumentWindow& parent);
     ~ImageProcessor();
 
@@ -40,7 +37,6 @@ public:
     std::unique_ptr<juce::AudioProcessorGraph::Node> inputNode, outputNode;
 
 private:
-
     void run() override;
 
     juce::Image* imagePtr;
@@ -48,7 +44,6 @@ private:
     medusa::DocumentWindow& parentWindow;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ImageProcessor)
-
 };
 
 }

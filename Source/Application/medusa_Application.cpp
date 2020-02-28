@@ -19,35 +19,27 @@
 #include "medusa_Application.h"
 #include "medusa_CommandIDs.h"
 
-medusa::Application::Application()
+medusa::Application&
+medusa::Application::getApplication()
 {
-
-}
-
-medusa::Application::~Application()
-{
-
-}
-
-medusa::Application& medusa::Application::getApplication()
-{
-
-    medusa::Application* const application = dynamic_cast<medusa::Application*>(juce::JUCEApplication::getInstance());
+    auto* const application = dynamic_cast<medusa::Application*>(
+        juce::JUCEApplication::getInstance()
+    );
     jassert(application != nullptr);
     return *application;
-
 }
 
-juce::ApplicationCommandManager& medusa::Application::getCommandManager()
+juce::ApplicationCommandManager&
+medusa::Application::getCommandManager()
 {
-
     auto& manager = medusa::Application::getApplication().commandManager;
     jassert(manager.get() != nullptr);
     return *manager.get();
-
 }
 
-void medusa::Application::initialise(const juce::String& commandLineParameters)
+void
+medusa::Application::initialise(
+    const juce::String& commandLineParameters)
 {
     commandManager = std::make_unique<juce::ApplicationCommandManager>();
     commandManager->registerAllCommandsForTarget(this);
@@ -60,55 +52,74 @@ void medusa::Application::initialise(const juce::String& commandLineParameters)
     scanForPlugins();
 }
 
-void medusa::Application::registerKeyMap()
+void
+medusa::Application::registerKeyMap()
 {
-
     auto keyPressMappingSet = commandManager->getKeyMappings();
 
-    keyPressMappingSet->addKeyPress(CommandIDs::open,       juce::KeyPress::createFromDescription("CMD + O"));
-    keyPressMappingSet->addKeyPress(CommandIDs::save,       juce::KeyPress::createFromDescription("CMD + S"));
-    keyPressMappingSet->addKeyPress(CommandIDs::saveAs,     juce::KeyPress::createFromDescription("CMD + SHIFT + S"));
-    keyPressMappingSet->addKeyPress(CommandIDs::close,      juce::KeyPress::createFromDescription("CMD + W"));
+    keyPressMappingSet->addKeyPress(
+        CommandIDs::open,
+        juce::KeyPress::createFromDescription("CMD + O")
+    );
+    keyPressMappingSet->addKeyPress(
+        CommandIDs::save,
+        juce::KeyPress::createFromDescription("CMD + S")
+    );
+    keyPressMappingSet->addKeyPress(
+        CommandIDs::saveAs,
+        juce::KeyPress::createFromDescription("CMD + SHIFT + S")
+    );
+    keyPressMappingSet->addKeyPress(
+        CommandIDs::close,
+        juce::KeyPress::createFromDescription("CMD + W")
+    );
 
-    keyPressMappingSet->addKeyPress(CommandIDs::zoomIn,     juce::KeyPress::createFromDescription("CMD + +"));
-    keyPressMappingSet->addKeyPress(CommandIDs::zoomOut,    juce::KeyPress::createFromDescription("CMD + -"));
-    keyPressMappingSet->addKeyPress(CommandIDs::actualSize, juce::KeyPress::createFromDescription("CMD + 0"));
-
+    keyPressMappingSet->addKeyPress(
+        CommandIDs::zoomIn,
+        juce::KeyPress::createFromDescription("CMD + +")
+    );
+    keyPressMappingSet->addKeyPress(
+        CommandIDs::zoomOut,
+        juce::KeyPress::createFromDescription("CMD + -")
+    );
+    keyPressMappingSet->addKeyPress(
+        CommandIDs::actualSize,
+        juce::KeyPress::createFromDescription("CMD + 0")
+    );
 }
 
-void medusa::Application::shutdown()
+void
+medusa::Application::shutdown()
 {
-
     juce::MenuBarModel::setMacMainMenu(nullptr);
 
     commandManager = nullptr;
     menuModel = nullptr;
-
 }
 
-void medusa::Application::systemRequestedQuit()
+void
+medusa::Application::systemRequestedQuit()
 {
-
     closeAllDocuments();
-
     juce::JUCEApplication::systemRequestedQuit();
-
 }
 
-void medusa::Application::createMenu(juce::PopupMenu &menu, const juce::String &menuName)
+void
+medusa::Application::createMenu(
+    juce::PopupMenu& menu,
+    const juce::String& menuName)
 {
-
     if (menuName == "File")
         createFileMenu(menu);
 
     else if (menuName == "View")
         createViewMenu(menu);
-
 }
 
-void medusa::Application::createFileMenu(juce::PopupMenu &menu)
+void
+medusa::Application::createFileMenu(
+    juce::PopupMenu& menu)
 {
-
     menu.addCommandItem(commandManager.get(), CommandIDs::open);
 
     menu.addSeparator();
@@ -119,33 +130,31 @@ void medusa::Application::createFileMenu(juce::PopupMenu &menu)
     menu.addSeparator();
 
     menu.addCommandItem(commandManager.get(), CommandIDs::close);
-
 }
 
-void medusa::Application::createViewMenu(juce::PopupMenu& menu)
+void
+medusa::Application::createViewMenu(
+    juce::PopupMenu& menu)
 {
-
     menu.addCommandItem(commandManager.get(), CommandIDs::zoomIn);
     menu.addCommandItem(commandManager.get(), CommandIDs::zoomOut);
     menu.addCommandItem(commandManager.get(), CommandIDs::actualSize);
-
 }
 
-juce::ApplicationCommandTarget* medusa::Application::getNextCommandTarget()
+juce::ApplicationCommandTarget*
+medusa::Application::getNextCommandTarget()
 {
-
     return nullptr;
-
 }
 
-void medusa::Application::getAllCommands(juce::Array<juce::CommandID>& commands)
+void
+medusa::Application::getAllCommands(
+    juce::Array<juce::CommandID>& commands)
 {
-
     JUCEApplication::getAllCommands(commands);
 
     const juce::CommandID ids [] =
     {
-
         CommandIDs::open,
         CommandIDs::save,
         CommandIDs::saveAs,
@@ -154,21 +163,20 @@ void medusa::Application::getAllCommands(juce::Array<juce::CommandID>& commands)
         CommandIDs::zoomIn,
         CommandIDs::zoomOut,
         CommandIDs::actualSize,
-
     };
 
     commands.addArray(ids, juce::numElementsInArray(ids));
-
 }
 
-void medusa::Application::getCommandInfo(juce::CommandID commandID, juce::ApplicationCommandInfo& result)
+void
+medusa::Application::getCommandInfo(
+    const juce::CommandID commandID,
+    juce::ApplicationCommandInfo& result)
 {
-
-    int documentsOpen = (documentWindows.size() > 0) ? 0 : 1;
+    const int documentsOpen = (documentWindows.size() > 0) ? 0 : 1;
 
     switch (commandID)
     {
-
         case CommandIDs::open:
             result.setInfo("Open...", "Open an image to process", "", 0);
             break;
@@ -200,19 +208,17 @@ void medusa::Application::getCommandInfo(juce::CommandID commandID, juce::Applic
         default:
             JUCEApplication::getCommandInfo(commandID, result);
             break;
-
     }
-
 }
 
-bool medusa::Application::perform(const juce::ApplicationCommandTarget::InvocationInfo &info)
+bool
+medusa::Application::perform(
+    const juce::ApplicationCommandTarget::InvocationInfo &info)
 {
-
-    medusa::DocumentWindow* activeWindow = getActiveWindow();
+    auto* const activeWindow = getActiveWindow();
 
     switch (info.commandID)
     {
-
         case CommandIDs::open:       createNewDocument();                 break;
         case CommandIDs::save:       saveDocument(activeWindow);          break;
         case CommandIDs::saveAs:     saveDocumentAs(activeWindow);        break;
@@ -222,95 +228,100 @@ bool medusa::Application::perform(const juce::ApplicationCommandTarget::Invocati
         case CommandIDs::zoomOut:    activeWindow->zoomOut();             break;
         case CommandIDs::actualSize: activeWindow->zoomReset();           break;
 
-        default:                    return juce::JUCEApplication::perform(info);
-
+        default:
+            return juce::JUCEApplication::perform(info);
     }
 
     return true;
-
 }
 
-void medusa::Application::createNewDocument()
+void
+medusa::Application::createNewDocument()
 {
-
-    juce::FileChooser fileChooser("Open...", juce::File::getSpecialLocation(juce::File::userHomeDirectory), "*.png, *.jpeg, *.jpg");
+    juce::FileChooser fileChooser(
+        "Open...",
+        juce::File::getSpecialLocation(juce::File::userHomeDirectory),
+        "*.png, *.jpeg, *.jpg"
+    );
 
     if (fileChooser.browseForFileToOpen())
     {
-
         juce::File file(fileChooser.getResult());
 
-        juce::Image image = juce::ImageFileFormat::loadFrom(file);
+        auto image = juce::ImageFileFormat::loadFrom(file);
 
         if (image.isNull())
         {
-
-            juce::AlertWindow::showMessageBox(juce::AlertWindow::WarningIcon, "Error", "Could not load image!");
+            juce::AlertWindow::showMessageBox(
+                juce::AlertWindow::WarningIcon,
+                "Error",
+                "Could not load image!"
+            );
 
             return;
-
         }
 
         if (image.getFormat() == juce::Image::ARGB)
-        {
-
             image = image.convertedToFormat(juce::Image::RGB);
-            
-        }
 
-        medusa::DocumentWindow* documentWindow = new medusa::DocumentWindow(file.getFileName(), file, image);
+        auto* const documentWindow = new medusa::DocumentWindow(
+            file.getFileName(),
+            file,
+            image
+        );
 
         documentWindow->setVisible(true);
-
         documentWindows.add(documentWindow);
-
     }
-
 }
 
-void medusa::Application::saveDocument(medusa::DocumentWindow* window)
+void
+medusa::Application::saveDocument(
+    medusa::DocumentWindow* window)
 {
-
     if (window->isDocumentDirty())
     {
-
-        const juce::File& file = window->getDocumentFile();
+        const auto& file = window->getDocumentFile();
         juce::FileOutputStream outputStream(file);
 
-        juce::Image image = window->getDocumentImage();
+        const auto image = window->getDocumentImage();
 
         bool success = false;
 
         if (file.getFileExtension() == ".png")
         {
-
             juce::PNGImageFormat png;
             success = png.writeImageToStream(image, outputStream);
-
         }
         else if (file.getFileExtension() == ".jpeg")
         {
-
             juce::JPEGImageFormat jpeg;
             success = jpeg.writeImageToStream(image, outputStream);
-
         }
 
         if (!success)
-            juce::NativeMessageBox::showMessageBox(juce::AlertWindow::WarningIcon, "Error", "Could not save file");
-
+        {
+            juce::NativeMessageBox::showMessageBox(
+                juce::AlertWindow::WarningIcon,
+                "Error",
+                "Could not save file"
+            );
+        }
     }
-
 }
 
-void medusa::Application::saveDocumentAs(medusa::DocumentWindow* window)
+void
+medusa::Application::saveDocumentAs(
+    medusa::DocumentWindow* window)
 {
-
-    juce::FileChooser fileChooser("Save As...", juce::File::getSpecialLocation(juce::File::userHomeDirectory), "*.png");
+    juce::FileChooser fileChooser(
+        "Save As...",
+        juce::File::getSpecialLocation(juce::File::userHomeDirectory),
+        "*.png"
+    );
 
     if (fileChooser.browseForFileToSave(true))
     {
-
         juce::File file(fileChooser.getResult().withFileExtension(".png"));
         juce::FileOutputStream outputStream(file);
 
@@ -319,87 +330,75 @@ void medusa::Application::saveDocumentAs(medusa::DocumentWindow* window)
         bool success = png.writeImageToStream(image, outputStream);
 
         if (!success)
-            juce::NativeMessageBox::showMessageBox(juce::AlertWindow::WarningIcon, "Error", "Could not save file");
-
+        {
+            juce::NativeMessageBox::showMessageBox(
+                juce::AlertWindow::WarningIcon,
+                "Error",
+                "Could not save file"
+            );
+        }
     }
-    
 }
 
-void medusa::Application::closeDocument(medusa::DocumentWindow *window)
+void
+medusa::Application::closeDocument(
+    medusa::DocumentWindow *window)
 {
+    juce::Array<medusa::PluginWindow*> windowsToRemove;
+    windowsToRemove.ensureStorageAllocated(pluginWindows.size());
 
-    for (int i = 0; i < pluginWindows.size(); ++i)
+    for (auto* const pluginWindow : pluginWindows)
+        if (pluginWindow->getParentWindow() == window)
+            windowsToRemove.add(pluginWindow);
+
+    for (auto* const pluginWindow : windowsToRemove)
     {
-
-        medusa::PluginWindow* pluginWindow = pluginWindows[i];
-
-        medusa::DocumentWindow* target = pluginWindow->getParentWindow();
-
-        if (target == window)
-        {
-
-            pluginWindows[i]->removeFromDesktop();
-            pluginWindows.remove(i);
-
-        }
-
+        pluginWindow->removeFromDesktop();
+        pluginWindows.removeObject(pluginWindow);
     }
 
     documentWindows.removeObject(window);
-
 }
 
-void medusa::Application::closeAllDocuments()
+void
+medusa::Application::closeAllDocuments()
 {
-
-    for (int i = 0; i < pluginWindows.size(); ++i)
-    {
-
-        pluginWindows[i]->removeFromDesktop();
-
-    }
+    for (auto* const pluginWindow : pluginWindows)
+        pluginWindow->removeFromDesktop();
 
     pluginWindows.clear();
-    
-    for (int i = 0; i < documentWindows.size(); ++i)
-    {
 
-        documentWindows[i]->closeButtonPressed();
-        
-    }
-    
+    for (auto* documentWindow : documentWindows)
+        documentWindow->closeButtonPressed();
 }
 
-medusa::DocumentWindow* medusa::Application::getActiveWindow()
+medusa::DocumentWindow*
+medusa::Application::getActiveWindow()
 {
-
-    for (int i = 0; i < documentWindows.size(); ++i)
-    {
-
-        if (documentWindows[i]->isActiveWindow())
-            return documentWindows[i];
-
-    }
+    for (auto* documentWindow : documentWindows)
+        if (documentWindow->isActiveWindow())
+            return documentWindow;
 
     return nullptr;
-
 }
 
-void medusa::Application::scanForPlugins()
+void
+medusa::Application::scanForPlugins()
 {
+    const juce::File appData = juce::File::getSpecialLocation(
+        juce::File::userApplicationDataDirectory
+    );
 
-    juce::File appData = juce::File::getSpecialLocation(juce::File::userApplicationDataDirectory);
-
-    juce::File medusaFolder = juce::File(appData.getFullPathName() + "/Application Support/medusa");
+    const juce::File medusaFolder(
+        appData.getFullPathName() + "/Application Support/medusa"
+    );
 
     if (!medusaFolder.exists())
-    {
-
         medusaFolder.createDirectory();
 
-    }
-
-    juce::File XmlCache = juce::File(medusaFolder.getFullPathName() + "/plugincache.xml");
+    const juce::File XmlCache(
+        medusaFolder.getFullPathName() + "/plugincache.xml"
+    );
 
     if (XmlCache.exists())
     {
@@ -411,20 +410,25 @@ void medusa::Application::scanForPlugins()
     }
     else
     {
-        juce::FileSearchPath vstSearchPaths("/Library/Audio/Plug-Ins/VST;~/Library/Audio/Plug-Ins/VST");
-        juce::VSTPluginFormat vst;
-        juce::PluginDirectoryScanner vstScanner(knownPluginList, vst, vstSearchPaths, true, juce::File());
+        juce::VSTPluginFormat format;
+        juce::PluginDirectoryScanner vstScanner(
+            knownPluginList,
+            format,
+            {
+                "/Library/Audio/Plug-Ins/VST;"
+                "~/Library/Audio/Plug-Ins/VST;"
+            },
+            true,
+            juce::File()
+        );
 
-        bool scanning = true;
-        while (scanning)
+        juce::String nextPlugin;
+        do
         {
-
-            juce::String nextPlugin = vstScanner.getNextPluginFileThatWillBeScanned();
+            nextPlugin = vstScanner.getNextPluginFileThatWillBeScanned();
             std::cout << nextPlugin << std::endl;
-
-            scanning = vstScanner.scanNextFile(true, nextPlugin);
-
         }
+        while (vstScanner.scanNextFile(true, nextPlugin));
 
         /* AU REMOVED UNTIL MENU NAMING IS CORRECTED */
 
@@ -450,10 +454,10 @@ void medusa::Application::scanForPlugins()
     pluginListCache = knownPluginList.createXml();
 }
 
-void medusa::Application::closePlugin(medusa::PluginWindow *window)
+void
+medusa::Application::closePlugin(
+    medusa::PluginWindow *window)
 {
-
     window->removeFromDesktop();
     pluginWindows.removeObject(window);
-
 }

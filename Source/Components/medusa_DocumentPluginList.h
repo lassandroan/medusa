@@ -25,19 +25,21 @@ namespace medusa
 
 class DocumentPluginList : public juce::ListBoxModel
 {
-
 public:
-
-    DocumentPluginList(juce::AudioProcessorGraph& graph, juce::ListBox& list);
+    DocumentPluginList(juce::AudioProcessorGraph&, juce::ListBox&);
 
     int getNumRows() override;
 
 private:
-
     void listBoxItemDoubleClicked(int row, const juce::MouseEvent& e) override;
     void backgroundClicked(const juce::MouseEvent& e) override;
 
-    void paintListBoxItem(int rowNumber, juce::Graphics& g, int width, int height, bool rowIsSelected) override;
+    void paintListBoxItem(
+        int rowNumber,
+        juce::Graphics&,
+        int width,
+        int height,
+        bool rowIsSelected) override;
 
     juce::AudioProcessorGraph& parentGraph;
     juce::ListBox& parentListBox;
@@ -45,7 +47,6 @@ private:
     juce::AudioPluginFormatManager formatManager;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(DocumentPluginList)
-
 };
 
 }

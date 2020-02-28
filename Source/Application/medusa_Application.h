@@ -28,19 +28,17 @@ namespace medusa
 
 class Application : public juce::JUCEApplication
 {
-
 public:
-
-    Application();
-    ~Application();
+    Application()  = default;
+    ~Application() = default;
 
     // application
     static Application& getApplication();
     static juce::ApplicationCommandManager& getCommandManager();
 
-    const juce::String getApplicationName() override    { return ProjectInfo::projectName;  }
-    const juce::String getApplicationVersion() override { return ProjectInfo::versionString;}
-    bool moreThanOneInstanceAllowed() override          { return false;                     }
+    const juce::String getApplicationName() override    { return ProjectInfo::projectName;   }
+    const juce::String getApplicationVersion() override { return ProjectInfo::versionString; }
+    bool moreThanOneInstanceAllowed() override          { return false;                      }
 
     void initialise(const juce::String& commandLineParameters) override;
     void registerKeyMap();
@@ -82,42 +80,32 @@ public:
     juce::KnownPluginList knownPluginList;
 
 private:
-
     struct MenuModel : public juce::MenuBarModel
     {
-
         MenuModel()
         {
-
             setApplicationCommandManagerToWatch(&getCommandManager());
-
         }
 
         juce::StringArray getMenuBarNames() override
         {
-
             const char* const names [] = { "File", "View", nullptr };
             return juce::StringArray(names);
-
         }
 
         juce::PopupMenu getMenuForIndex(int topLevelMenuIndex, const juce::String& menuName) override
         {
-
             juce::PopupMenu menu;
             getApplication().createMenu(menu, menuName);
             return menu;
-
         }
 
         void menuItemSelected(int menuItemID, int topLevelMenuIndex) override {}
-        
     };
     
     std::unique_ptr<MenuModel> menuModel;
     
     juce::TooltipWindow tooltipWindow;
-
 };
 
 }

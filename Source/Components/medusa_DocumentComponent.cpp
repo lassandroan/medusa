@@ -20,23 +20,19 @@
 
 #include "../Application/medusa_DocumentWindow.h"
 
-medusa::DocumentComponent::DocumentComponent(medusa::DocumentWindow& parent) : parentWindow(parent)
+medusa::DocumentComponent::DocumentComponent(
+    medusa::DocumentWindow& parent) :
+        parentWindow(parent)
 {
     imageViewport = std::make_unique<medusa::ImageViewport>(
         parent.getDocumentImage()
     );
     addAndMakeVisible(imageViewport.get());
 
-    int width  = imageViewport->getWidth();
-    int height = imageViewport->getHeight();
+    const int width  = juce::jmax(imageViewport->getWidth(),  300);
+    const int height = juce::jmax(imageViewport->getHeight(), 300);
 
-    if (width < 300)
-        width = 300;
-
-    if (height < 300)
-        height = 300;
-
-    pluginListModel = std::make_unique< medusa::DocumentPluginList>(
+    pluginListModel = std::make_unique<medusa::DocumentPluginList>(
         parent.getDocumentProcessor(), pluginList
     );
     pluginList.setModel(pluginListModel.get());
@@ -45,17 +41,15 @@ medusa::DocumentComponent::DocumentComponent(medusa::DocumentWindow& parent) : p
     addAndMakeVisible(pluginList);
 
     setSize(imageViewport->getWidth() + 150, height);
-
 }
 
-void medusa::DocumentComponent::resized()
+void
+medusa::DocumentComponent::resized()
 {
-
     int width  = getWidth();
     int height = getHeight();
 
     imageViewport->setSize(width - 100, height);
     pluginList.setSize(150, height);
     pluginList.setTopLeftPosition(width - 100, 0);
-
 }

@@ -23,10 +23,8 @@ namespace medusa
 
 namespace CommandIDs
 {
-
     enum
     {
-
         // File
         open = 1,
         save,
@@ -37,11 +35,7 @@ namespace CommandIDs
         zoomIn,
         zoomOut,
         actualSize
-
-
     };
-
 }
 
 }
-

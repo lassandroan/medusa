@@ -19,7 +19,10 @@
 #include "medusa_ImageProcessor.h"
 #include "medusa_DocumentWindow.h"
 
-medusa::ImageProcessor::ImageProcessor(medusa::DocumentWindow& parent) : juce::Thread("ImageProcessor"), parentWindow(parent)
+medusa::ImageProcessor::ImageProcessor(
+    medusa::DocumentWindow& parent) :
+        juce::Thread("ImageProcessor"),
+        parentWindow(parent)
 {
     setPlayConfigDetails(1, 1, 44100, 512);
     setProcessingPrecision(juce::AudioProcessor::singlePrecision);
@@ -39,38 +42,33 @@ medusa::ImageProcessor::ImageProcessor(medusa::DocumentWindow& parent) : juce::T
 
 medusa::ImageProcessor::~ImageProcessor()
 {
-
     releaseResources();
     stopThread(200);
-
 }
 
-void medusa::ImageProcessor::processImage(juce::Image& image)
+void
+medusa::ImageProcessor::processImage(
+    juce::Image& image)
 {
-
     if (getNumNodes() == 2)
         return;
 
     imagePtr = &image;
 
     startThread();
-
 }
 
-void medusa::ImageProcessor::run()
+void
+medusa::ImageProcessor::run()
 {
-
     std::cout << "Entering thread" << std::endl;
 
     if (!imagePtr)
     {
-
         signalThreadShouldExit();
-
     }
     else
     {
-
         const auto data = std::make_unique<juce::Image::BitmapData>(
             *imagePtr, juce::Image::BitmapData::readWrite
         );
@@ -86,49 +84,37 @@ void medusa::ImageProcessor::run()
 
         while (offset < totalSamples)
         {
-
             int numSamples = 512;
 
-            if (totalSamples - offset >= 512)
-            {
-                numSamples = 512;
-            }
-            else
-            {
+            if (totalSamples - offset < 512)
                 numSamples = totalSamples - offset;
-            }
 
             for (int i = offset; i < numSamples + offset; ++i)
             {
-
-                tempbuffer.setSample(0, i - offset, ((float)data->data[i] / (float)255));
-                
+                tempbuffer.setSample(
+                    0,
+                    i - offset,
+                    ((float)data->data[i] / (float)255)
+                );
             }
 
             processBlock(tempbuffer, midibuff);
 
             for (int i = offset; i < numSamples + offset; ++i)
             {
-
-                data->data[i] = (int)(tempbuffer.getSample(0, i - offset) * 255.0f);
-
+                data->data[i] = (int)(
+                    tempbuffer.getSample(0, i - offset) * 255.0f
+                );
             }
 
             offset += numSamples;
-
         }
 
         parentWindow.refreshImage();
-
     }
 
     while(!threadShouldExit())
-    {
-
         sleep(50);
 
-    }
-
     std::cout << "Exiting thread" << std::endl;
-    
 }

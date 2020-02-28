@@ -21,23 +21,26 @@
 #include "../Application/medusa_DocumentWindow.h"
 #include "../Application/medusa_PluginWindow.h"
 
-medusa::DocumentPluginList::DocumentPluginList(juce::AudioProcessorGraph& graph, juce::ListBox& list) : parentGraph(graph), parentListBox(list)
+medusa::DocumentPluginList::DocumentPluginList(
+    juce::AudioProcessorGraph& graph,
+    juce::ListBox& list) :
+        parentGraph(graph),
+        parentListBox(list)
 {
-
     formatManager.addDefaultFormats();
-
 }
 
-int medusa::DocumentPluginList::getNumRows()
+int
+medusa::DocumentPluginList::getNumRows()
 {
-
     return parentGraph.getNumNodes() - 2;
-
 }
 
-void medusa::DocumentPluginList::listBoxItemDoubleClicked(int row, const juce::MouseEvent& e)
+void
+medusa::DocumentPluginList::listBoxItemDoubleClicked(
+    const int row,
+    const juce::MouseEvent& e)
 {
-
     medusa::Application& application = medusa::Application::getApplication();
     medusa::DocumentWindow* activeWindow = application.getActiveWindow();
 
@@ -48,30 +51,27 @@ void medusa::DocumentPluginList::listBoxItemDoubleClicked(int row, const juce::M
 
     pluginWindow->addToDesktop();
     pluginWindow->setVisible(true);
-
 }
 
-void medusa::DocumentPluginList::backgroundClicked(const juce::MouseEvent& e)
+void
+medusa::DocumentPluginList::backgroundClicked(
+    const juce::MouseEvent& e)
 {
-
     parentListBox.deselectAllRows();
 
     if (e.mods.isRightButtonDown())
     {
-
         medusa::Application& application = medusa::Application::getApplication();
 
-        if (application.pluginListCache != nullptr)
+        if (application.pluginListCache)
         {
-
-            application.knownPluginList.recreateFromXml(*application.pluginListCache);
-
+            application.knownPluginList.recreateFromXml(
+                *application.pluginListCache
+            );
         }
         else
         {
-
             application.scanForPlugins();
-
         }
 
         juce::PopupMenu m;
@@ -101,12 +101,12 @@ void medusa::DocumentPluginList::backgroundClicked(const juce::MouseEvent& e)
 
                 if (parentGraph.getNumNodes() > 3)
                 {
-
-                    juce::AudioProcessorGraph::Node* lastNode = parentGraph.getNode(parentGraph.getNumNodes() - 2);
+                    const auto lastNode = parentGraph.getNode(
+                        parentGraph.getNumNodes() - 2
+                    );
 
                     if (lastNode)
                     {
-
                         juce::AudioProcessorGraph::Node* outputNode = parentGraph.getNode(1);
 
                         parentGraph.removeConnection({
@@ -118,14 +118,12 @@ void medusa::DocumentPluginList::backgroundClicked(const juce::MouseEvent& e)
                         parentGraph.addConnection({
                             {newNode->nodeID, 0}, {outputNode->nodeID, 0}
                         });
-
                     }
-
                 }
                 else
                 {
-                    juce::AudioProcessorGraph::Node* inputNode = parentGraph.getNode(0);
-                    juce::AudioProcessorGraph::Node* outputNode = parentGraph.getNode(1);
+                    const auto inputNode  = parentGraph.getNode(0);
+                    const auto outputNode = parentGraph.getNode(1);
 
                     parentGraph.addConnection({
                         {inputNode->nodeID, 0}, {newNode->nodeID, 0}
@@ -139,38 +137,45 @@ void medusa::DocumentPluginList::backgroundClicked(const juce::MouseEvent& e)
             }
             else
             {
-
-                juce::NativeMessageBox::showMessageBox(juce::AlertWindow::WarningIcon, "Error", "Could not load plugin: " + error);
-                return;
-
+                juce::NativeMessageBox::showMessageBox(
+                    juce::AlertWindow::WarningIcon,
+                    "Error",
+                    "Could not load plugin: " + error
+                );
             }
-
         }
-
     }
-
 }
 
-void medusa::DocumentPluginList::paintListBoxItem(int rowNumber, juce::Graphics &g, int width, int height, bool rowIsSelected)
+void
+medusa::DocumentPluginList::paintListBoxItem(
+    const int rowNumber,
+    juce::Graphics& g,
+    const int width,
+    const int height,
+    const bool rowIsSelected)
 {
-
     if (rowIsSelected)
     {
-
         g.fillAll(juce::Colours::purple);
         g.setColour(juce::Colours::white);
-
     }
     else
     {
-
         g.fillAll(juce::Colours::darkgrey);
         g.setColour(juce::Colours::black);
-
     }
 
-    const juce::String& pluginName = parentGraph.getNode(rowNumber + 2)->getProcessor()->getName();
+    const auto& pluginName = parentGraph
+        .getNode(rowNumber + 2)
+       ->getProcessor()
+       ->getName();
 
-    g.drawFittedText(pluginName, 0, 0, width, height, juce::Justification::centredLeft, 1);
-
+    g.drawFittedText(
+        pluginName,
+        0, 0,
+        width, height,
+        juce::Justification::centredLeft,
+        1
+    );
 }
