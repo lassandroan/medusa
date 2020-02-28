@@ -41,27 +41,23 @@ medusa::Application& medusa::Application::getApplication()
 juce::ApplicationCommandManager& medusa::Application::getCommandManager()
 {
 
-    juce::ApplicationCommandManager* manager = medusa::Application::getApplication().commandManager;
-    jassert(manager != nullptr);
-    return *manager;
+    auto& manager = medusa::Application::getApplication().commandManager;
+    jassert(manager.get() != nullptr);
+    return *manager.get();
 
 }
 
 void medusa::Application::initialise(const juce::String& commandLineParameters)
 {
-
-    commandManager = new juce::ApplicationCommandManager();
-
+    commandManager = std::make_unique<juce::ApplicationCommandManager>();
     commandManager->registerAllCommandsForTarget(this);
 
     registerKeyMap();
 
-    menuModel = new MenuModel();
-
-    juce::MenuBarModel::setMacMainMenu(menuModel);
+    menuModel = std::make_unique<MenuModel>();
+    juce::MenuBarModel::setMacMainMenu(menuModel.get());
 
     scanForPlugins();
-
 }
 
 void medusa::Application::registerKeyMap()
@@ -113,25 +109,25 @@ void medusa::Application::createMenu(juce::PopupMenu &menu, const juce::String &
 void medusa::Application::createFileMenu(juce::PopupMenu &menu)
 {
 
-    menu.addCommandItem(commandManager, CommandIDs::open);
+    menu.addCommandItem(commandManager.get(), CommandIDs::open);
 
     menu.addSeparator();
 
-    menu.addCommandItem(commandManager, CommandIDs::save);
-    menu.addCommandItem(commandManager, CommandIDs::saveAs);
+    menu.addCommandItem(commandManager.get(), CommandIDs::save);
+    menu.addCommandItem(commandManager.get(), CommandIDs::saveAs);
 
     menu.addSeparator();
 
-    menu.addCommandItem(commandManager, CommandIDs::close);
+    menu.addCommandItem(commandManager.get(), CommandIDs::close);
 
 }
 
 void medusa::Application::createViewMenu(juce::PopupMenu& menu)
 {
 
-    menu.addCommandItem(commandManager, CommandIDs::zoomIn);
-    menu.addCommandItem(commandManager, CommandIDs::zoomOut);
-    menu.addCommandItem(commandManager, CommandIDs::actualSize);
+    menu.addCommandItem(commandManager.get(), CommandIDs::zoomIn);
+    menu.addCommandItem(commandManager.get(), CommandIDs::zoomOut);
+    menu.addCommandItem(commandManager.get(), CommandIDs::actualSize);
 
 }
 
@@ -407,17 +403,14 @@ void medusa::Application::scanForPlugins()
 
     if (XmlCache.exists())
     {
-
         std::cout << "Loading plugin list from cache file" << std::endl;
 
-        juce::ScopedPointer<juce::XmlElement> xml = juce::XmlDocument(XmlCache).getDocumentElement();
-
-        knownPluginList.recreateFromXml(*xml);
-
+        knownPluginList.recreateFromXml(
+            *juce::XmlDocument(XmlCache).getDocumentElement()
+        );
     }
     else
     {
-
         juce::FileSearchPath vstSearchPaths("/Library/Audio/Plug-Ins/VST;~/Library/Audio/Plug-Ins/VST");
         juce::VSTPluginFormat vst;
         juce::PluginDirectoryScanner vstScanner(knownPluginList, vst, vstSearchPaths, true, juce::File());
@@ -451,15 +444,10 @@ void medusa::Application::scanForPlugins()
 //        }
 
         XmlCache.create();
-
-        juce::ScopedPointer<juce::XmlElement> xml = knownPluginList.createXml();
-
-        XmlCache.replaceWithText(xml->createDocument(""));
-
+        XmlCache.replaceWithText(knownPluginList.createXml()->toString());
     }
 
     pluginListCache = knownPluginList.createXml();
-
 }
 
 void medusa::Application::closePlugin(medusa::PluginWindow *window)

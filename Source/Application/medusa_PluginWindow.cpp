@@ -24,8 +24,7 @@ medusa::PluginWindow::PluginWindow(medusa::DocumentWindow& parent, juce::AudioPr
 
     setUsingNativeTitleBar(true);
     setContentOwned(content, true);
-    pluginEditor = content;
-
+    pluginEditor.reset(content);
 }
 
 void medusa::PluginWindow::closeButtonPressed()

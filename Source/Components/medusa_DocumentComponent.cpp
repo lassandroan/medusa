@@ -22,9 +22,10 @@
 
 medusa::DocumentComponent::DocumentComponent(medusa::DocumentWindow& parent) : parentWindow(parent)
 {
-
-    imageViewport = new medusa::ImageViewport(parent.getDocumentImage());
-    addAndMakeVisible(imageViewport);
+    imageViewport = std::make_unique<medusa::ImageViewport>(
+        parent.getDocumentImage()
+    );
+    addAndMakeVisible(imageViewport.get());
 
     int width  = imageViewport->getWidth();
     int height = imageViewport->getHeight();
@@ -35,8 +36,10 @@ medusa::DocumentComponent::DocumentComponent(medusa::DocumentWindow& parent) : p
     if (height < 300)
         height = 300;
 
-    pluginListModel = new medusa::DocumentPluginList(parent.getDocumentProcessor(), pluginList);
-    pluginList.setModel(pluginListModel);
+    pluginListModel = std::make_unique< medusa::DocumentPluginList>(
+        parent.getDocumentProcessor(), pluginList
+    );
+    pluginList.setModel(pluginListModel.get());
     pluginList.setSize(150, height);
     pluginList.setTopLeftPosition(width, 0);
     addAndMakeVisible(pluginList);

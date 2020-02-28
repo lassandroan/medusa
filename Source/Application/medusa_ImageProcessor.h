@@ -37,7 +37,7 @@ public:
 
     void processImage(juce::Image& image);
 
-    juce::ScopedPointer<juce::AudioProcessorGraph::Node> inputNode, outputNode;
+    std::unique_ptr<juce::AudioProcessorGraph::Node> inputNode, outputNode;
 
 private:
 

@@ -21,13 +21,20 @@
 
 medusa::ImageProcessor::ImageProcessor(medusa::DocumentWindow& parent) : juce::Thread("ImageProcessor"), parentWindow(parent)
 {
-
     setPlayConfigDetails(1, 1, 44100, 512);
     setProcessingPrecision(juce::AudioProcessor::singlePrecision);
 
-    addNode(new juce::AudioProcessorGraph::AudioGraphIOProcessor(juce::AudioProcessorGraph::AudioGraphIOProcessor::audioInputNode));
-    addNode(new juce::AudioProcessorGraph::AudioGraphIOProcessor(juce::AudioProcessorGraph::AudioGraphIOProcessor::audioOutputNode));
+    addNode(
+        std::make_unique<juce::AudioProcessorGraph::AudioGraphIOProcessor>(
+            juce::AudioProcessorGraph::AudioGraphIOProcessor::audioInputNode
+        )
+    );
 
+    addNode(
+        std::make_unique<juce::AudioProcessorGraph::AudioGraphIOProcessor>(
+            juce::AudioProcessorGraph::AudioGraphIOProcessor::audioOutputNode
+        )
+    );
 }
 
 medusa::ImageProcessor::~ImageProcessor()
@@ -64,7 +71,9 @@ void medusa::ImageProcessor::run()
     else
     {
 
-        juce::ScopedPointer<juce::Image::BitmapData> data = new juce::Image::BitmapData(*imagePtr, juce::Image::BitmapData::readWrite);
+        const auto data = std::make_unique<juce::Image::BitmapData>(
+            *imagePtr, juce::Image::BitmapData::readWrite
+        );
 
         int totalSamples = (data->width * data->height) * data->pixelStride;
 

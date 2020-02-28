@@ -41,9 +41,9 @@ private:
 
     void resized() override;
 
-    juce::ScopedPointer<ImageViewport> imageViewport;
+    std::unique_ptr<ImageViewport> imageViewport;
 
-    juce::ScopedPointer<DocumentPluginList> pluginListModel;
+    std::unique_ptr<DocumentPluginList> pluginListModel;
     juce::ListBox pluginList;
 
     medusa::DocumentWindow& parentWindow;

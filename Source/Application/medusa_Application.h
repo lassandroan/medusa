@@ -73,12 +73,12 @@ public:
     void scanForPlugins();
     void closePlugin(PluginWindow* window);
 
-    juce::ScopedPointer<juce::ApplicationCommandManager> commandManager;
+    std::unique_ptr<juce::ApplicationCommandManager> commandManager;
 
     juce::OwnedArray<DocumentWindow> documentWindows;
     juce::OwnedArray<PluginWindow> pluginWindows;
 
-    juce::ScopedPointer<juce::XmlElement> pluginListCache;
+    std::unique_ptr<juce::XmlElement> pluginListCache;
     juce::KnownPluginList knownPluginList;
 
 private:
@@ -114,7 +114,7 @@ private:
         
     };
     
-    juce::ScopedPointer<MenuModel> menuModel;
+    std::unique_ptr<MenuModel> menuModel;
     
     juce::TooltipWindow tooltipWindow;
 

@@ -3,7 +3,7 @@
 <JUCERPROJECT id="DYoSUd" name="medusa" displaySplashScreen="0" reportAppUsage="0"
               splashScreenColour="Dark" projectType="guiapp" version="0.1.0"
               bundleIdentifier="com.lassandroan.medusa" includeBinaryInAppConfig="1"
-              cppLanguageStandard="11" jucerVersion="5.1.2" defines="DONT_SET_USING_JUCE_NAMESPACE=1">
+              cppLanguageStandard="11" jucerVersion="5.4.4" defines="DONT_SET_USING_JUCE_NAMESPACE=1">
   <MAINGROUP id="xCl9fQ" name="medusa">
     <GROUP id="{9E21A6A3-1AAA-22DA-A732-9575A2A8C6B4}" name="Source">
       <GROUP id="{DEC8FF79-CEC4-6804-1A55-EC116D0F5F06}" name="Application">
@@ -27,12 +27,6 @@
               file="Source/Application/medusa_PluginWindow.h"/>
         <FILE id="dvrL1A" name="medusa_Main.cpp" compile="1" resource="0" file="Source/Application/medusa_Main.cpp"/>
       </GROUP>
-      <GROUP id="{0D61F1F8-188B-BDA2-C339-B8F8C2EEC983}" name="BinaryData">
-        <FILE id="rXDiSX" name="Arvin Bold.ttf" compile="0" resource="1" file="Source/BinaryData/Arvin Bold.ttf"/>
-        <FILE id="uOuimB" name="Arvin License.txt" compile="0" resource="0"
-              file="Source/BinaryData/Arvin License.txt"/>
-        <FILE id="vbzdAD" name="Arvin.ttf" compile="0" resource="1" file="Source/BinaryData/Arvin.ttf"/>
-      </GROUP>
       <GROUP id="{8B8FE5F3-2330-1689-764D-B909CF0FE7E9}" name="Components">
         <FILE id="HN50ow" name="medusa_DocumentComponent.cpp" compile="1" resource="0"
               file="Source/Components/medusa_DocumentComponent.cpp"/>
@@ -47,16 +41,10 @@
         <FILE id="y8PVPc" name="medusa_ImageViewport.h" compile="0" resource="0"
               file="Source/Components/medusa_ImageViewport.h"/>
       </GROUP>
-      <GROUP id="{1F184ECA-307C-15B9-1B69-D2FC182AE001}" name="Theme">
-        <FILE id="X4mu47" name="medusa_Colours.h" compile="0" resource="0"
-              file="Source/Theme/medusa_Colours.h"/>
-        <FILE id="Niwy4P" name="medusa_Font.h" compile="0" resource="0" file="Source/Theme/medusa_Font.h"/>
-        <FILE id="J1SMwP" name="medusa_Theme.h" compile="0" resource="0" file="Source/Theme/medusa_Theme.h"/>
-      </GROUP>
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>
-    <XCODE_MAC targetFolder="Builds/MacOSX">
+    <XCODE_MAC targetFolder="Builds/MacOSX" vstLegacyFolder="../../../../SDKs/VST_SDK/VST2_SDK">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" isDebug="1" optimisation="1" targetName="medusa"
                        osxCompatibility="10.6 SDK" osxArchitecture="64BitUniversal"/>
@@ -85,5 +73,8 @@
     <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_gui_extra" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
   </MODULES>
-  <JUCEOPTIONS JUCE_PLUGINHOST_VST="enabled" JUCE_PLUGINHOST_AU="enabled"/>
+  <JUCEOPTIONS JUCE_PLUGINHOST_AU="1" JUCE_PLUGINHOST_VST="1"/>
+  <LIVE_SETTINGS>
+    <OSX/>
+  </LIVE_SETTINGS>
 </JUCERPROJECT>

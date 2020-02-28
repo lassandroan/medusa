@@ -83,16 +83,19 @@ void medusa::DocumentPluginList::backgroundClicked(const juce::MouseEvent& e)
         if (pluginDescription)
         {
 
-            juce::ScopedPointer<juce::XmlElement> xml = pluginDescription->createXml();
-            std::cout << xml->createDocument("") << std::endl;
+            const auto xml = pluginDescription->createXml();
+            std::cout << xml->toString() << std::endl;
 
             juce::String error;
-            juce::AudioPluginInstance* plugin = formatManager.createPluginInstance(*pluginDescription, 44100, 512, error);
+            auto plugin = formatManager.createPluginInstance(*pluginDescription, 44100, 512, error);
 
-            if (plugin)
+            if (plugin.get())
             {
-
-                juce::AudioProcessorGraph::Node* newNode = parentGraph.addNode(plugin);
+                const auto newNode = parentGraph.addNode(
+                    std::unique_ptr<juce::AudioProcessor>(
+                        dynamic_cast<juce::AudioProcessor*>(plugin.release())
+                    )
+                );
 
                 if (parentGraph.getNumNodes() > 3)
                 {
@@ -104,26 +107,33 @@ void medusa::DocumentPluginList::backgroundClicked(const juce::MouseEvent& e)
 
                         juce::AudioProcessorGraph::Node* outputNode = parentGraph.getNode(1);
 
-                        parentGraph.removeConnection(lastNode->nodeId, 0, outputNode->nodeId, 0);
-                        parentGraph.addConnection(lastNode->nodeId, 0, newNode->nodeId, 0);
-                        parentGraph.addConnection(newNode->nodeId, 0, outputNode->nodeId, 0);
+                        parentGraph.removeConnection({
+                            {lastNode->nodeID, 0}, {outputNode->nodeID, 0}
+                        });
+                        parentGraph.addConnection({
+                            {lastNode->nodeID, 0}, {newNode->nodeID, 0}
+                        });
+                        parentGraph.addConnection({
+                            {newNode->nodeID, 0}, {outputNode->nodeID, 0}
+                        });
 
                     }
 
                 }
                 else
                 {
-
                     juce::AudioProcessorGraph::Node* inputNode = parentGraph.getNode(0);
                     juce::AudioProcessorGraph::Node* outputNode = parentGraph.getNode(1);
 
-                    parentGraph.addConnection(inputNode->nodeId, 0, newNode->nodeId, 0);
-                    parentGraph.addConnection(newNode->nodeId, 0, outputNode->nodeId, 0);
-
+                    parentGraph.addConnection({
+                        {inputNode->nodeID, 0}, {newNode->nodeID, 0}
+                    });
+                    parentGraph.addConnection({
+                        {newNode->nodeID, 0}, {outputNode->nodeID, 0}
+                    });
                 }
 
                 parentListBox.updateContent();
-
             }
             else
             {

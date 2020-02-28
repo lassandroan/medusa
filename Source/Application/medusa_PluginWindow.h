@@ -39,7 +39,7 @@ private:
 
     medusa::DocumentWindow& parentWindow;
 
-    juce::ScopedPointer<juce::AudioProcessorEditor> pluginEditor;
+    std::unique_ptr<juce::AudioProcessorEditor> pluginEditor;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PluginWindow)
 
