@@ -22,34 +22,29 @@
 
 medusa::DocumentComponent::DocumentComponent(
     medusa::DocumentWindow& parent) :
-        parentWindow(parent)
+        imageViewport(parent.getDocumentImage()),
+        pluginListModel(parent.getDocumentProcessor(), pluginList)
 {
-    imageViewport = std::make_unique<medusa::ImageViewport>(
-        parent.getDocumentImage()
-    );
-    addAndMakeVisible(imageViewport.get());
+    addAndMakeVisible(imageViewport);
 
-    const int width  = juce::jmax(imageViewport->getWidth(),  300);
-    const int height = juce::jmax(imageViewport->getHeight(), 300);
+    const int width  = juce::jmax(imageViewport.getWidth(),  300);
+    const int height = juce::jmax(imageViewport.getHeight(), 300);
 
-    pluginListModel = std::make_unique<medusa::DocumentPluginList>(
-        parent.getDocumentProcessor(), pluginList
-    );
-    pluginList.setModel(pluginListModel.get());
+    pluginList.setModel(&pluginListModel);
     pluginList.setSize(150, height);
     pluginList.setTopLeftPosition(width, 0);
     addAndMakeVisible(pluginList);
 
-    setSize(imageViewport->getWidth() + 150, height);
+    setSize(imageViewport.getWidth() + 150, height);
 }
 
 void
 medusa::DocumentComponent::resized()
 {
-    int width  = getWidth();
-    int height = getHeight();
+    const int width  = getWidth();
+    const int height = getHeight();
 
-    imageViewport->setSize(width - 100, height);
+    imageViewport.setSize(width - 100, height);
     pluginList.setSize(150, height);
     pluginList.setTopLeftPosition(width - 100, 0);
 }

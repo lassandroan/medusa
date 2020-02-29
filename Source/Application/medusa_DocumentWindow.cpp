@@ -102,8 +102,8 @@ medusa::DocumentWindow::zoomIn()
     auto* const c = dynamic_cast<medusa::DocumentComponent*>(
         getContentComponent()
     );
-    c->imageViewport->zoomContainerIn();
-    c->imageViewport->repaint();
+    c->imageViewport.zoomContainerIn();
+    c->imageViewport.repaint();
 }
 
 void
@@ -112,8 +112,8 @@ medusa::DocumentWindow::zoomOut()
     auto* const c = dynamic_cast<medusa::DocumentComponent*>(
         getContentComponent()
     );
-    c->imageViewport->zoomContainerOut();
-    c->imageViewport->repaint();
+    c->imageViewport.zoomContainerOut();
+    c->imageViewport.repaint();
 }
 
 void
@@ -122,8 +122,8 @@ medusa::DocumentWindow::zoomReset()
     auto* const c = dynamic_cast<medusa::DocumentComponent*>(
         getContentComponent()
     );
-    c->imageViewport->resetContainer();
-    c->imageViewport->repaint();
+    c->imageViewport.resetContainer();
+    c->imageViewport.repaint();
 }
 
 bool

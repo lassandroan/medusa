@@ -30,20 +30,16 @@ class DocumentWindow;
 
 class DocumentComponent : public juce::Component
 {
-    friend medusa::DocumentWindow;
-
 public:
-    DocumentComponent(DocumentWindow& parent);
+    DocumentComponent(medusa::DocumentWindow&);
+
+    ImageViewport imageViewport;
+
+    DocumentPluginList pluginListModel;
+    juce::ListBox      pluginList;
 
 private:
     void resized() override;
-
-    std::unique_ptr<ImageViewport> imageViewport;
-
-    std::unique_ptr<DocumentPluginList> pluginListModel;
-    juce::ListBox pluginList;
-
-    medusa::DocumentWindow& parentWindow;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(DocumentComponent)
 };
