@@ -40,10 +40,9 @@ private:
 
     void paint(juce::Graphics&) override;
 
-    juce::ComponentDragger dragger;
-
-    juce::Component imageContainer;
-    juce::Image& viewportImage;
+    juce::Point<int>     preDragPosition;
+    juce::Rectangle<int> imageBounds;
+    juce::Image&         viewportImage;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ImageViewport);
 };
