@@ -17,7 +17,7 @@
  */
 
 #include "medusa_ImageProcessor.h"
-#include "medusa_DocumentWindow.h"
+#include "../Windows/medusa_DocumentWindow.h"
 
 medusa::ImageProcessor::ImageProcessor(
     medusa::DocumentWindow& parent) :

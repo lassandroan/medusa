@@ -20,8 +20,8 @@
 
 #include "../../JuceLibraryCode/JuceHeader.h"
 
-#include "medusa_DocumentWindow.h"
-#include "medusa_PluginWindow.h"
+#include "../Windows/medusa_DocumentWindow.h"
+#include "../Windows/medusa_PluginWindow.h"
 
 namespace medusa
 {

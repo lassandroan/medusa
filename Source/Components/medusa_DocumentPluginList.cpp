@@ -18,8 +18,8 @@
 
 #include "medusa_DocumentPluginList.h"
 #include "../Application/medusa_Application.h"
-#include "../Application/medusa_DocumentWindow.h"
-#include "../Application/medusa_PluginWindow.h"
+#include "../Windows/medusa_DocumentWindow.h"
+#include "../Windows/medusa_PluginWindow.h"
 
 medusa::DocumentPluginList::DocumentPluginList(
     juce::AudioProcessorGraph& graph,

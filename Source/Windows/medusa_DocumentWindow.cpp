@@ -17,8 +17,8 @@
  */
 
 #include "medusa_DocumentWindow.h"
-#include "medusa_Application.h"
-#include "medusa_CommandIDs.h"
+#include "../Application/medusa_Application.h"
+#include "../Application/medusa_CommandIDs.h"
 
 medusa::DocumentWindow::DocumentWindow(
     const juce::String& name,

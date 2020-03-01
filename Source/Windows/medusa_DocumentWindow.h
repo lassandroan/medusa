@@ -20,7 +20,7 @@
 
 #include "../../JuceLibraryCode/JuceHeader.h"
 
-#include "medusa_ImageProcessor.h"
+#include "../Application/medusa_ImageProcessor.h"
 #include "../Components/medusa_DocumentComponent.h"
 
 namespace medusa

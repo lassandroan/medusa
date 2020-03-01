@@ -17,7 +17,7 @@
  */
 
 #include "medusa_PluginWindow.h"
-#include "medusa_Application.h"
+#include "../Application/medusa_Application.h"
 
 medusa::PluginWindow::PluginWindow(
     medusa::DocumentWindow& parent,

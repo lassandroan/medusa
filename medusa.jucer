@@ -7,39 +7,41 @@
   <MAINGROUP id="xCl9fQ" name="medusa">
     <GROUP id="{9E21A6A3-1AAA-22DA-A732-9575A2A8C6B4}" name="Source">
       <GROUP id="{DEC8FF79-CEC4-6804-1A55-EC116D0F5F06}" name="Application">
-        <FILE id="KnfQ5O" name="medusa_Application.cpp" compile="1" resource="0"
+        <FILE id="kDkwAd" name="medusa_Application.cpp" compile="1" resource="0"
               file="Source/Application/medusa_Application.cpp"/>
-        <FILE id="syy1b6" name="medusa_Application.h" compile="0" resource="0"
+        <FILE id="cIskQ8" name="medusa_Application.h" compile="0" resource="0"
               file="Source/Application/medusa_Application.h"/>
-        <FILE id="HHgtm4" name="medusa_DocumentWindow.cpp" compile="1" resource="0"
-              file="Source/Application/medusa_DocumentWindow.cpp"/>
-        <FILE id="sMxGcf" name="medusa_DocumentWindow.h" compile="0" resource="0"
-              file="Source/Application/medusa_DocumentWindow.h"/>
-        <FILE id="T3D0IX" name="medusa_CommandIDs.h" compile="0" resource="0"
+        <FILE id="h0GXcD" name="medusa_CommandIDs.h" compile="0" resource="0"
               file="Source/Application/medusa_CommandIDs.h"/>
-        <FILE id="AdoOeH" name="medusa_ImageProcessor.cpp" compile="1" resource="0"
+        <FILE id="KYwfXO" name="medusa_ImageProcessor.cpp" compile="1" resource="0"
               file="Source/Application/medusa_ImageProcessor.cpp"/>
-        <FILE id="HkXsP4" name="medusa_ImageProcessor.h" compile="0" resource="0"
+        <FILE id="iei555" name="medusa_ImageProcessor.h" compile="0" resource="0"
               file="Source/Application/medusa_ImageProcessor.h"/>
-        <FILE id="b5t2fa" name="medusa_PluginWindow.cpp" compile="1" resource="0"
-              file="Source/Application/medusa_PluginWindow.cpp"/>
-        <FILE id="OFkLQs" name="medusa_PluginWindow.h" compile="0" resource="0"
-              file="Source/Application/medusa_PluginWindow.h"/>
-        <FILE id="dvrL1A" name="medusa_Main.cpp" compile="1" resource="0" file="Source/Application/medusa_Main.cpp"/>
+        <FILE id="dhMdvC" name="medusa_Main.cpp" compile="1" resource="0" file="Source/Application/medusa_Main.cpp"/>
       </GROUP>
-      <GROUP id="{8B8FE5F3-2330-1689-764D-B909CF0FE7E9}" name="Components">
-        <FILE id="HN50ow" name="medusa_DocumentComponent.cpp" compile="1" resource="0"
+      <GROUP id="{323892C1-9303-9E04-F905-13CC2F96AB3F}" name="Components">
+        <FILE id="rQCvna" name="medusa_DocumentComponent.cpp" compile="1" resource="0"
               file="Source/Components/medusa_DocumentComponent.cpp"/>
-        <FILE id="PLEoIu" name="medusa_DocumentComponent.h" compile="0" resource="0"
+        <FILE id="D6w5LQ" name="medusa_DocumentComponent.h" compile="0" resource="0"
               file="Source/Components/medusa_DocumentComponent.h"/>
-        <FILE id="tBl6Et" name="medusa_DocumentPluginList.cpp" compile="1"
+        <FILE id="cohweV" name="medusa_DocumentPluginList.cpp" compile="1"
               resource="0" file="Source/Components/medusa_DocumentPluginList.cpp"/>
-        <FILE id="PD6laL" name="medusa_DocumentPluginList.h" compile="0" resource="0"
+        <FILE id="aJwIms" name="medusa_DocumentPluginList.h" compile="0" resource="0"
               file="Source/Components/medusa_DocumentPluginList.h"/>
-        <FILE id="klamzk" name="medusa_ImageViewport.cpp" compile="1" resource="0"
+        <FILE id="wbD9wX" name="medusa_ImageViewport.cpp" compile="1" resource="0"
               file="Source/Components/medusa_ImageViewport.cpp"/>
-        <FILE id="y8PVPc" name="medusa_ImageViewport.h" compile="0" resource="0"
+        <FILE id="PhciIs" name="medusa_ImageViewport.h" compile="0" resource="0"
               file="Source/Components/medusa_ImageViewport.h"/>
+      </GROUP>
+      <GROUP id="{E8385977-9ABB-6B07-138F-00599A29FB72}" name="Windows">
+        <FILE id="kwynGM" name="medusa_DocumentWindow.cpp" compile="1" resource="0"
+              file="Source/Windows/medusa_DocumentWindow.cpp"/>
+        <FILE id="yatYUJ" name="medusa_DocumentWindow.h" compile="0" resource="0"
+              file="Source/Windows/medusa_DocumentWindow.h"/>
+        <FILE id="l1HCC6" name="medusa_PluginWindow.cpp" compile="1" resource="0"
+              file="Source/Windows/medusa_PluginWindow.cpp"/>
+        <FILE id="QpKYhs" name="medusa_PluginWindow.h" compile="0" resource="0"
+              file="Source/Windows/medusa_PluginWindow.h"/>
       </GROUP>
     </GROUP>
   </MAINGROUP>

@@ -18,7 +18,7 @@
 
 #include "medusa_DocumentComponent.h"
 
-#include "../Application/medusa_DocumentWindow.h"
+#include "../Windows/medusa_DocumentWindow.h"
 
 medusa::DocumentComponent::DocumentComponent(
     medusa::DocumentWindow& parent) :
