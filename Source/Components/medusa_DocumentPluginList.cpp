@@ -41,13 +41,23 @@ medusa::DocumentPluginList::listBoxItemDoubleClicked(
     const int row,
     const juce::MouseEvent& e)
 {
-    medusa::Application& application = medusa::Application::getApplication();
-    medusa::DocumentWindow* activeWindow = application.getActiveWindow();
+    medusa::Application& application = medusa::Application::getInstance();
+
+    medusa::DocumentWindow* activeWindow = nullptr;
+    for (auto* const window : application.documentWindows)
+    {
+        if (not window->isActiveWindow())
+            continue;
+
+        activeWindow = window;
+        break;
+    }
+    jassert(activeWindow);
 
     juce::AudioProcessor* plugin = parentGraph.getNode(row + 2)->getProcessor();
 
-    medusa::PluginWindow* pluginWindow = new PluginWindow(*activeWindow, plugin->createEditor());
-    application.pluginWindows.add(pluginWindow);
+    auto* const pluginWindow = new PluginWindow(plugin->createEditor());
+    activeWindow->pluginWindows.add(pluginWindow);
 
     pluginWindow->addToDesktop();
     pluginWindow->setVisible(true);
@@ -61,7 +71,7 @@ medusa::DocumentPluginList::backgroundClicked(
 
     if (e.mods.isRightButtonDown())
     {
-        medusa::Application& application = medusa::Application::getApplication();
+        auto& application = medusa::Application::getInstance();
 
         if (application.pluginListCache)
         {

@@ -20,52 +20,46 @@
 
 #include "../../JuceLibraryCode/JuceHeader.h"
 
+#include "../Application/medusa_Document.h"
 #include "../Application/medusa_ImageProcessor.h"
 #include "../Components/medusa_DocumentComponent.h"
+#include "medusa_PluginWindow.h"
 
 namespace medusa
 {
+    class DocumentWindow;
+}
 
-class DocumentWindow : public juce::DocumentWindow
+class medusa::DocumentWindow final : public  juce::DocumentWindow,
+                                     public  juce::ApplicationCommandTarget,
+                                     private juce::ChangeListener
 {
 public:
-    DocumentWindow(
-        const juce::String& name,
-        const juce::File& documentFile,
-        juce::Image image
-    );
-
+    DocumentWindow(medusa::Document);
     ~DocumentWindow() = default;
 
     void closeButtonPressed() override;
 
-    // handlers
-    juce::Image& getDocumentImage();
-    const juce::File& getDocumentFile();
-    ImageProcessor& getDocumentProcessor();
+    juce::ApplicationCommandTarget* getNextCommandTarget() override;
+    void getAllCommands(juce::Array<juce::CommandID>&) override;
+    void getCommandInfo(juce::CommandID, juce::ApplicationCommandInfo&) override;
+    bool perform(const InvocationInfo&) override;
 
-    void setDocumentStatus(bool isDirty);
-    bool isDocumentDirty();
-
-    void zoomIn();
-    void zoomOut();
-    void zoomReset();
-
-    void updateImage();
     void refreshImage();
 
+    medusa::ImageProcessor imageProcessor;
+    medusa::Document document;
+    juce::OwnedArray<medusa::PluginWindow> pluginWindows;
+
 private:
+    void changeListenerCallback(juce::ChangeBroadcaster*) override;
+
     bool keyPressed(const juce::KeyPress& k) override;
 
     void resized() override;
 
-    bool dirty;
-
-    const juce::File& documentFile;
-    juce::Image documentImage;
-    ImageProcessor imageProcessor;
+    medusa::DocumentComponent editor;
+    bool closeButtonGuard;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(DocumentWindow)
 };
-
-}

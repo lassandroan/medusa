@@ -20,61 +20,45 @@
 
 #include "../../JuceLibraryCode/JuceHeader.h"
 
+#include "medusa_Commands.h"
 #include "../Windows/medusa_DocumentWindow.h"
-#include "../Windows/medusa_PluginWindow.h"
 
 namespace medusa
 {
+    class Application;
+}
 
-class Application : public juce::JUCEApplication
+class medusa::Application final : public juce::JUCEApplication
 {
 public:
     Application()  = default;
     ~Application() = default;
 
-    // application
-    static Application& getApplication();
-    static juce::ApplicationCommandManager& getCommandManager();
+    static Application& getInstance();
 
-    const juce::String getApplicationName() override    { return ProjectInfo::projectName;   }
-    const juce::String getApplicationVersion() override { return ProjectInfo::versionString; }
-    bool moreThanOneInstanceAllowed() override          { return false;                      }
+    const juce::String getApplicationName() override;
+    const juce::String getApplicationVersion() override;
+    bool moreThanOneInstanceAllowed() override;
 
     void initialise(const juce::String& commandLineParameters) override;
-    void registerKeyMap();
     void shutdown() override;
 
     void systemRequestedQuit() override;
 
-    // menubar
     void createMenu(juce::PopupMenu& menu, const juce::String& menuName);
     void createFileMenu(juce::PopupMenu& menu);
     void createViewMenu(juce::PopupMenu& menu);
 
-    // commands
     juce::ApplicationCommandTarget* getNextCommandTarget() override;
     void getAllCommands(juce::Array<juce::CommandID>& commands) override;
     void getCommandInfo(juce::CommandID commandID, juce::ApplicationCommandInfo& info) override;
     bool perform(const juce::ApplicationCommandTarget::InvocationInfo& info) override;
 
-    void updateCommands();
-
-    // document/window handlers
-    void createNewDocument();
-    void saveDocument(DocumentWindow* window);
-    void saveDocumentAs(DocumentWindow* window);
-    void closeDocument(DocumentWindow* window);
-    void closeAllDocuments();
-
-    DocumentWindow* getActiveWindow();
-
     void scanForPlugins();
-    void closePlugin(PluginWindow* window);
 
-    std::unique_ptr<juce::ApplicationCommandManager> commandManager;
+    juce::ApplicationCommandManager commandManager;
 
-    juce::OwnedArray<DocumentWindow> documentWindows;
-    juce::OwnedArray<PluginWindow> pluginWindows;
+    juce::OwnedArray<medusa::DocumentWindow> documentWindows;
 
     std::unique_ptr<juce::XmlElement> pluginListCache;
     juce::KnownPluginList knownPluginList;
@@ -84,28 +68,24 @@ private:
     {
         MenuModel()
         {
-            setApplicationCommandManagerToWatch(&getCommandManager());
+            setApplicationCommandManagerToWatch(&getInstance().commandManager);
         }
 
         juce::StringArray getMenuBarNames() override
         {
-            const char* const names [] = { "File", "View", nullptr };
-            return juce::StringArray(names);
+            return {"File", "View"};
         }
 
         juce::PopupMenu getMenuForIndex(int topLevelMenuIndex, const juce::String& menuName) override
         {
             juce::PopupMenu menu;
-            getApplication().createMenu(menu, menuName);
+            getInstance().createMenu(menu, menuName);
             return menu;
         }
 
         void menuItemSelected(int menuItemID, int topLevelMenuIndex) override {}
     };
-    
-    std::unique_ptr<MenuModel> menuModel;
-    
+
+    MenuModel menuModel;
     juce::TooltipWindow tooltipWindow;
 };
-
-}

@@ -19,29 +19,19 @@
 #pragma once
 
 #include "../../JuceLibraryCode/JuceHeader.h"
-#include "medusa_DocumentWindow.h"
 
 namespace medusa
 {
+    class PluginWindow;
+}
 
-class PluginWindow : public juce::DocumentWindow
+class medusa::PluginWindow : public juce::DocumentWindow
 {
 public:
-    PluginWindow(
-        medusa::DocumentWindow& parent,
-        juce::AudioProcessorEditor* content
-    );
+    PluginWindow(juce::AudioProcessorEditor* content);
 
     void closeButtonPressed() override;
 
-    medusa::DocumentWindow* getParentWindow();
-
 private:
-    medusa::DocumentWindow& parentWindow;
-
-    std::unique_ptr<juce::AudioProcessorEditor> pluginEditor;
-
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PluginWindow)
 };
-
-}

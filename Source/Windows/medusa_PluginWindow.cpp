@@ -20,27 +20,20 @@
 #include "../Application/medusa_Application.h"
 
 medusa::PluginWindow::PluginWindow(
-    medusa::DocumentWindow& parent,
-    juce::AudioProcessorEditor* content) :
+    juce::AudioProcessorEditor* editor) :
         juce::DocumentWindow(
-            content->processor.getName(),
+            editor->processor.getName(),
             juce::Colours::black,
             4
-        ),
-        parentWindow(parent)
+        )
 {
     setUsingNativeTitleBar(true);
-    setContentOwned(content, true);
-    pluginEditor.reset(content);
+    setContentOwned(editor, true);
 }
 
 void
 medusa::PluginWindow::closeButtonPressed()
 {
-    medusa::Application::getApplication().closePlugin(this);
-}
-
-medusa::DocumentWindow* medusa::PluginWindow::getParentWindow()
-{
-    return &parentWindow;
+    removeFromDesktop();
+    delete this;
 }

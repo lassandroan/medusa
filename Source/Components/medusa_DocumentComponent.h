@@ -28,10 +28,16 @@ namespace medusa
 
 class DocumentWindow;
 
-class DocumentComponent : public juce::Component
+class DocumentComponent : public juce::Component,
+                          public juce::ApplicationCommandTarget
 {
 public:
     DocumentComponent(medusa::DocumentWindow&);
+
+    juce::ApplicationCommandTarget* getNextCommandTarget() override;
+    void getAllCommands(juce::Array<juce::CommandID>&) override;
+    void getCommandInfo(juce::CommandID, juce::ApplicationCommandInfo&) override;
+    bool perform(const InvocationInfo&) override;
 
     ImageViewport imageViewport;
 

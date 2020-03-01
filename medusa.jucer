@@ -11,8 +11,12 @@
               file="Source/Application/medusa_Application.cpp"/>
         <FILE id="cIskQ8" name="medusa_Application.h" compile="0" resource="0"
               file="Source/Application/medusa_Application.h"/>
-        <FILE id="h0GXcD" name="medusa_CommandIDs.h" compile="0" resource="0"
-              file="Source/Application/medusa_CommandIDs.h"/>
+        <FILE id="ZeFDQ4" name="medusa_Commands.h" compile="0" resource="0"
+              file="Source/Application/medusa_Commands.h"/>
+        <FILE id="EDRzUN" name="medusa_Document.cpp" compile="1" resource="0"
+              file="Source/Application/medusa_Document.cpp"/>
+        <FILE id="eVakW0" name="medusa_Document.h" compile="0" resource="0"
+              file="Source/Application/medusa_Document.h"/>
         <FILE id="KYwfXO" name="medusa_ImageProcessor.cpp" compile="1" resource="0"
               file="Source/Application/medusa_ImageProcessor.cpp"/>
         <FILE id="iei555" name="medusa_ImageProcessor.h" compile="0" resource="0"

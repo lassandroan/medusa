@@ -18,112 +18,181 @@
 
 #include "medusa_DocumentWindow.h"
 #include "../Application/medusa_Application.h"
-#include "../Application/medusa_CommandIDs.h"
+#include "../Application/medusa_Commands.h"
 
 medusa::DocumentWindow::DocumentWindow(
-    const juce::String& name,
-    const juce::File& file,
-    juce::Image image) :
+    medusa::Document document) :
         juce::DocumentWindow(
-            name,
+            document.getDocumentTitle(),
             juce::Colours::black,
             7
         ),
-        documentFile(file),
-        imageProcessor(*this)
+        imageProcessor(*this),
+        document(document),
+        editor(*this)
 {
-    setUsingNativeTitleBar(true);
+    document.addChangeListener(this);
 
-    documentImage = image.convertedToFormat(juce::Image::RGB);
+    setUsingNativeTitleBar(true);
 
     setContentOwned(new DocumentComponent(*this), true);
 
     setResizable(true, false);
 
-    dirty = false;
+    closeButtonGuard = false;
 }
 
 void
 medusa::DocumentWindow::closeButtonPressed()
 {
-    medusa::Application& application = medusa::Application::getApplication();
+    // FIXME (02/29/20): Even though the save dialog is modal, the close button
+    //                   on macOS is still receiving clicks and triggering this
+    //                   callback more times. It will even create a dialog each
+    //                   time and cause all kinds of nasty issues.
+    if (closeButtonGuard)
+        return;
 
-    if (dirty)
+    juce::ScopedValueSetter<bool> closeGuard(closeButtonGuard, true, false);
+
+    using SaveResult = juce::FileBasedDocument::SaveResult;
+
+    DBG("clicky");
+
+    switch (document.saveIfNeededAndUserAgrees())
     {
-        const int choice = juce::NativeMessageBox::showYesNoCancelBox(
-            juce::AlertWindow::WarningIcon,
-            "Image has been modified",
-            "Would you like to save this image?"
-        );
-
-        if (choice == 0)
+        case SaveResult::failedToWriteToFile:
+            // TODO (02/29/20): Needs error handling
+            jassertfalse;
+            juce::AlertWindow::showMessageBox(
+                juce::AlertWindow::WarningIcon,
+                "Unable to save file",
+                ""
+            );
             return;
-        else if (choice == 1)
-            application.saveDocument(this);
-    }
 
-    application.closeDocument(this);
+        case SaveResult::userCancelledSave:
+            DBG("cancel");
+            return;
+
+        case SaveResult::savedOk:
+            for (auto* const window : pluginWindows)
+                window->removeFromDesktop();
+            break;
+
+        default:
+            DBG("WTF");
+            break;
+    };
+
+    medusa::Application::getInstance().documentWindows.removeObject(this);
 }
 
-juce::Image&
-medusa::DocumentWindow::getDocumentImage()
+juce::ApplicationCommandTarget*
+medusa::DocumentWindow::getNextCommandTarget()
 {
-    return documentImage;
-}
-
-const juce::File&
-medusa::DocumentWindow::getDocumentFile()
-{
-    return documentFile;
-}
-
-medusa::ImageProcessor&
-medusa::DocumentWindow::getDocumentProcessor()
-{
-    return imageProcessor;
+    return nullptr;
 }
 
 void
-medusa::DocumentWindow::setDocumentStatus(
-    bool isDirty)
+medusa::DocumentWindow::getAllCommands(
+    juce::Array<juce::CommandID> &commands)
 {
-    dirty = isDirty;
+    commands.add(
+        CommandIDs::Save,
+        CommandIDs::SaveAs,
+        CommandIDs::Close,
+        CommandIDs::ZoomIn,
+        CommandIDs::ZoomOut,
+        CommandIDs::ActualSize
+    );
+}
+
+void
+medusa::DocumentWindow::getCommandInfo(
+    juce::CommandID command,
+    juce::ApplicationCommandInfo &info)
+{
+    using CommandFlags = juce::ApplicationCommandInfo::CommandFlags;
+
+    switch (info.commandID)
+    {
+        case CommandIDs::Save:
+            info.setInfo(
+                "Save...",
+                "",
+                "",
+                document.hasChangedSinceSaved() ? 0 : CommandFlags::isDisabled
+            );
+            break;
+
+        case CommandIDs::SaveAs:
+            info.setInfo(
+                "Save As...",
+                "",
+                "",
+                0
+            );
+            break;
+
+        case CommandIDs::Close:
+            info.setInfo(
+                "Close",
+                "",
+                "",
+                0
+            );
+            break;
+
+        case CommandIDs::ZoomIn:
+            info.setInfo(
+                "Zoom In",
+                "",
+                "",
+                0
+            );
+            break;
+
+        case CommandIDs::ZoomOut:
+            info.setInfo(
+                "Zoom Out",
+                "",
+                "",
+                0
+            );
+            break;
+
+        case CommandIDs::ActualSize:
+            info.setInfo(
+                "Actual Size",
+                "",
+                "",
+                0
+            );
+            break;
+    };
 }
 
 bool
-medusa::DocumentWindow::isDocumentDirty()
+medusa::DocumentWindow::perform(
+    const juce::ApplicationCommandTarget::InvocationInfo& info)
 {
-    return dirty;
+    switch (info.commandID)
+    {
+        case CommandIDs::Close:
+            closeButtonPressed();
+            break;
+    }
+
+    return false;
 }
 
 void
-medusa::DocumentWindow::zoomIn()
+medusa::DocumentWindow::changeListenerCallback(
+    juce::ChangeBroadcaster*)
 {
-    auto* const c = dynamic_cast<medusa::DocumentComponent*>(
-        getContentComponent()
-    );
-    c->imageViewport.zoomContainerIn();
-    c->imageViewport.repaint();
-}
-
-void
-medusa::DocumentWindow::zoomOut()
-{
-    auto* const c = dynamic_cast<medusa::DocumentComponent*>(
-        getContentComponent()
-    );
-    c->imageViewport.zoomContainerOut();
-    c->imageViewport.repaint();
-}
-
-void
-medusa::DocumentWindow::zoomReset()
-{
-    auto* const c = dynamic_cast<medusa::DocumentComponent*>(
-        getContentComponent()
-    );
-    c->imageViewport.resetContainer();
-    c->imageViewport.repaint();
+    auto* const peer = getPeer();
+    peer->setRepresentedFile(document.getFile());
+    peer->setDocumentEditedStatus(document.hasChangedSinceSaved());
 }
 
 bool
@@ -132,8 +201,8 @@ medusa::DocumentWindow::keyPressed(
 {
     if (k.getKeyCode() == juce::KeyPress::spaceKey)
     {
-        updateImage();
-
+        imageProcessor.processImage(document.image);
+        document.changed();
         return true;
     }
 
@@ -148,20 +217,9 @@ medusa::DocumentWindow::resized()
 }
 
 void
-medusa::DocumentWindow::updateImage()
-{
-    imageProcessor.processImage(documentImage);
-    dirty = true;
-}
-
-void
 medusa::DocumentWindow::refreshImage()
 {
-    std::cout << "Refreshing image" << std::endl;
-
     juce::MessageManagerLock lock(&imageProcessor);
-
     imageProcessor.signalThreadShouldExit();
-
     repaint();
 }

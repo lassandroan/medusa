@@ -22,8 +22,8 @@
 
 medusa::DocumentComponent::DocumentComponent(
     medusa::DocumentWindow& parent) :
-        imageViewport(parent.getDocumentImage()),
-        pluginListModel(parent.getDocumentProcessor(), pluginList)
+        imageViewport(parent.document.image),
+        pluginListModel(parent.imageProcessor, pluginList)
 {
     addAndMakeVisible(imageViewport);
 
@@ -36,6 +36,34 @@ medusa::DocumentComponent::DocumentComponent(
     addAndMakeVisible(pluginList);
 
     setSize(imageViewport.getWidth() + 150, height);
+}
+
+juce::ApplicationCommandTarget*
+medusa::DocumentComponent::getNextCommandTarget()
+{
+    return nullptr;
+}
+
+void
+medusa::DocumentComponent::getAllCommands(
+    juce::Array<juce::CommandID>& commands)
+{
+
+}
+
+void
+medusa::DocumentComponent::getCommandInfo(
+    juce::CommandID command,
+    juce::ApplicationCommandInfo& info)
+{
+
+}
+
+bool
+medusa::DocumentComponent::perform(
+    const InvocationInfo& info)
+{
+    return false;
 }
 
 void
