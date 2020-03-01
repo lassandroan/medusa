@@ -21,14 +21,14 @@
 #include "../Application/medusa_Commands.h"
 
 medusa::DocumentWindow::DocumentWindow(
-    medusa::Document document) :
+    medusa::Document newDocument) :
         juce::DocumentWindow(
-            document.getDocumentTitle(),
+            newDocument.getDocumentTitle(),
             juce::Colours::black,
             7
         ),
         imageProcessor(*this),
-        document(document),
+        document(newDocument),
         editor(*this)
 {
     document.addChangeListener(this);
@@ -114,7 +114,7 @@ medusa::DocumentWindow::getCommandInfo(
 {
     using CommandFlags = juce::ApplicationCommandInfo::CommandFlags;
 
-    switch (info.commandID)
+    switch (command)
     {
         case CommandIDs::Save:
             info.setInfo(

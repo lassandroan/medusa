@@ -3,7 +3,9 @@
 <JUCERPROJECT id="DYoSUd" name="medusa" displaySplashScreen="0" reportAppUsage="0"
               splashScreenColour="Dark" projectType="guiapp" version="0.1.0"
               bundleIdentifier="com.lassandroan.medusa" includeBinaryInAppConfig="1"
-              cppLanguageStandard="11" jucerVersion="5.4.4" defines="DONT_SET_USING_JUCE_NAMESPACE=1">
+              cppLanguageStandard="11" jucerVersion="5.4.4" defines="DONT_SET_USING_JUCE_NAMESPACE=1"
+              companyName="Antonio Lassandro" companyWebsite="https:://www.github.com/lassandroan/"
+              companyEmail="lassandroan@gmail.com">
   <MAINGROUP id="xCl9fQ" name="medusa">
     <GROUP id="{9E21A6A3-1AAA-22DA-A732-9575A2A8C6B4}" name="Source">
       <GROUP id="{DEC8FF79-CEC4-6804-1A55-EC116D0F5F06}" name="Application">
@@ -52,10 +54,10 @@
   <EXPORTFORMATS>
     <XCODE_MAC targetFolder="Builds/MacOSX" vstLegacyFolder="../../../../SDKs/VST_SDK/VST2_SDK">
       <CONFIGURATIONS>
-        <CONFIGURATION name="Debug" isDebug="1" optimisation="1" targetName="medusa"
-                       osxCompatibility="10.6 SDK" osxArchitecture="64BitUniversal"/>
-        <CONFIGURATION name="Release" isDebug="0" optimisation="3" targetName="medusa"
-                       osxCompatibility="10.6 SDK" osxArchitecture="64BitUniversal"/>
+        <CONFIGURATION name="Debug" isDebug="1" optimisation="1" osxCompatibility="10.6 SDK"
+                       osxArchitecture="64BitUniversal" recommendedWarnings="LLVM"/>
+        <CONFIGURATION name="Release" isDebug="0" optimisation="3" osxCompatibility="10.7 SDK"
+                       osxArchitecture="64BitIntel" recommendedWarnings="LLVM"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_core" path="../../../../JUCE/modules"/>

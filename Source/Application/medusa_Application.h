@@ -76,14 +76,14 @@ private:
             return {"File", "View"};
         }
 
-        juce::PopupMenu getMenuForIndex(int topLevelMenuIndex, const juce::String& menuName) override
+        juce::PopupMenu getMenuForIndex(int, const juce::String& menuName) override
         {
             juce::PopupMenu menu;
             getInstance().createMenu(menu, menuName);
             return menu;
         }
 
-        void menuItemSelected(int menuItemID, int topLevelMenuIndex) override {}
+        void menuItemSelected(int, int) override {}
     };
 
     MenuModel menuModel;

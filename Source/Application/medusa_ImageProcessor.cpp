@@ -102,7 +102,7 @@ medusa::ImageProcessor::run()
 
             for (int i = offset; i < numSamples + offset; ++i)
             {
-                data->data[i] = (int)(
+                data->data[i] = (uint8_t)(
                     tempbuffer.getSample(0, i - offset) * 255.0f
                 );
             }

@@ -46,22 +46,22 @@ medusa::DocumentComponent::getNextCommandTarget()
 
 void
 medusa::DocumentComponent::getAllCommands(
-    juce::Array<juce::CommandID>& commands)
+    juce::Array<juce::CommandID>&)
 {
 
 }
 
 void
 medusa::DocumentComponent::getCommandInfo(
-    juce::CommandID command,
-    juce::ApplicationCommandInfo& info)
+    juce::CommandID,
+    juce::ApplicationCommandInfo&)
 {
 
 }
 
 bool
 medusa::DocumentComponent::perform(
-    const InvocationInfo& info)
+    const InvocationInfo&)
 {
     return false;
 }

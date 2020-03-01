@@ -70,7 +70,7 @@ medusa::ImageViewport::resetContainer()
 
 void
 medusa::ImageViewport::mouseDown(
-    const juce::MouseEvent& e)
+    const juce::MouseEvent&)
 {
     preDragPosition = imageBounds.getPosition();
 }

@@ -28,6 +28,9 @@ class Document final : public juce::FileBasedDocument
 public:
     Document();
     ~Document() = default;
+
+    // TODO (02/29/20): This is very likely not compatible with the
+    //                  ChangeBroadcaster ancestor of this class
     Document(const Document&);
 
     juce::Image image;

@@ -39,7 +39,7 @@ medusa::DocumentPluginList::getNumRows()
 void
 medusa::DocumentPluginList::listBoxItemDoubleClicked(
     const int row,
-    const juce::MouseEvent& e)
+    const juce::MouseEvent&)
 {
     medusa::Application& application = medusa::Application::getInstance();
 

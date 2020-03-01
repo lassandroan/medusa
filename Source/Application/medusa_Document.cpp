@@ -64,7 +64,7 @@ medusa::Document::loadDocument(
 
 juce::Result
 medusa::Document::saveDocument(
-    const juce::File& file)
+    const juce::File&)
 {
     return juce::Result::ok();
 }
@@ -78,7 +78,7 @@ medusa::Document::getLastDocumentOpened()
 
 void
 medusa::Document::setLastDocumentOpened(
-    const juce::File &file)
+    const juce::File&)
 {
     // TODO (02/29/20): juce::RecentlyOpenedFileList
 }

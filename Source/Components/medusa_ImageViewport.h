@@ -44,7 +44,7 @@ private:
     juce::Rectangle<int> imageBounds;
     juce::Image&         viewportImage;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ImageViewport);
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ImageViewport)
 };
 
 }

@@ -45,7 +45,7 @@ medusa::Application::moreThanOneInstanceAllowed()
 
 void
 medusa::Application::initialise(
-    const juce::String& commandLineParameters)
+    const juce::String&)
 {
     // TODO (02/29/20): Allow initial file to open in parameters
     commandManager.registerAllCommandsForTarget(this);
@@ -134,8 +134,6 @@ medusa::Application::getCommandInfo(
     const juce::CommandID commandID,
     juce::ApplicationCommandInfo& info)
 {
-    using Flags = juce::ApplicationCommandInfo::CommandFlags;
-
     switch (commandID)
     {
         case CommandIDs::New:
