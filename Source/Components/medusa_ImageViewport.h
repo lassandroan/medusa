@@ -38,11 +38,8 @@ private:
     void mouseWheelMove(const juce::MouseEvent&,
                         const juce::MouseWheelDetails&) override;
 
-    void paint(juce::Graphics&) override;
-
-    juce::Point<int>     preDragPosition;
-    juce::Rectangle<int> imageBounds;
-    juce::Image&         viewportImage;
+    juce::ComponentDragger dragger;
+    juce::ImageComponent   image;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ImageViewport)
 };

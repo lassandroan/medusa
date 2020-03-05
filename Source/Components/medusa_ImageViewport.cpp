@@ -19,103 +19,90 @@
 #include "medusa_ImageViewport.h"
 
 medusa::ImageViewport::ImageViewport(
-    juce::Image& image) :
-        viewportImage(image)
+    juce::Image& source)
 {
-    imageBounds = viewportImage.getBounds();
-    setBounds(imageBounds);
+    image.setInterceptsMouseClicks(false, false);
+    image.setOpaque(true);
+    image.setImage(source);
+    image.setImagePlacement(juce::RectanglePlacement::fillDestination);
+    image.setBounds(source.getBounds());
+    addAndMakeVisible(image);
+
+    setBounds(source.getBounds());
 }
 
 void
 medusa::ImageViewport::zoomContainerIn()
 {
-    const int width  = imageBounds.getWidth();
-    const int height = imageBounds.getHeight();
+    const int width  = image.getWidth();
+    const int height = image.getHeight();
 
-    const int maxWidth  = viewportImage.getWidth() * 4;
-    const int maxHeight = viewportImage.getHeight() * 4;
+    const int maxWidth  = image.getImage().getWidth() * 4;
+    const int maxHeight = image.getImage().getHeight() * 4;
 
     if (width * 2 < maxWidth and height * 2 < maxHeight)
-    {
-        imageBounds *= 2.0f;
-        imageBounds.setCentre(getLocalBounds().getCentre());
-        repaint();
-    }
+        image.centreWithSize(width * 2, height * 2);
 }
 
 void
 medusa::ImageViewport::zoomContainerOut()
 {
-    const int width  = imageBounds.getWidth();
-    const int height = imageBounds.getHeight();
+    const int width  = image.getWidth();
+    const int height = image.getHeight();
 
-    const int minWidth  = viewportImage.getWidth() / 4;
-    const int minHeight = viewportImage.getHeight() / 4;
+    const int minWidth  = image.getImage().getWidth() / 4;
+    const int minHeight = image.getImage().getHeight() / 4;
 
     if (width / 2 > minWidth and height / 2 > minHeight)
-    {
-        imageBounds /= 2.0f;
-        imageBounds.setCentre(getLocalBounds().getCentre());
-        repaint();
-    }
+        image.centreWithSize(width / 2, height / 2);
 }
 
 void
 medusa::ImageViewport::resetContainer()
 {
-    imageBounds = viewportImage.getBounds();
-    imageBounds.setCentre(getLocalBounds().getCentre());
-    repaint();
+    image.centreWithSize(
+        image.getImage().getWidth(),
+        image.getImage().getHeight()
+    );
 }
 
 void
 medusa::ImageViewport::mouseDown(
-    const juce::MouseEvent&)
+    const juce::MouseEvent& e)
 {
-    preDragPosition = imageBounds.getPosition();
+    dragger.startDraggingComponent(&image, e);
 }
 
 void
-medusa::ImageViewport::mouseDrag(const juce::MouseEvent& e)
+medusa::ImageViewport::mouseDrag(
+    const juce::MouseEvent& e)
 {
-    imageBounds.setPosition(
-        preDragPosition.x + e.getDistanceFromDragStartX(),
-        preDragPosition.y + e.getDistanceFromDragStartY()
-    );
-    repaint();
+    dragger.dragComponent(&image, e, nullptr);
 }
 
 void medusa::ImageViewport::mouseWheelMove(const juce::MouseEvent& e, const juce::MouseWheelDetails& w)
 {
     if (e.mods.isCommandDown())
     {
-        const auto maxSize = viewportImage.getBounds() * 4;
-        const auto minSize = viewportImage.getBounds() / 4;
+        const auto maxSize = image.getImage().getBounds() * 4;
+        const auto minSize = image.getImage().getBounds() / 4;
 
         const float diff = (1.0f - w.deltaY);
 
-        const auto newSize = imageBounds.withZeroOrigin() * diff;
+        const auto newSize = image.getLocalBounds() * diff;
 
         if (not newSize.contains(minSize) or not maxSize.contains(newSize))
             return;
 
-        imageBounds = newSize.withPosition(imageBounds.getPosition());
+        image.setSize(newSize.getWidth(), newSize.getHeight());
     }
     else
     {
-        imageBounds.translate(
+        image.setBounds(image.getBounds().translated(
             juce::roundToInt(w.deltaX * 128),
             juce::roundToInt(w.deltaY * 128)
-        );
+        ));
     }
 
     repaint();
-}
-
-void
-medusa::ImageViewport::paint(
-    juce::Graphics& g)
-{
-    g.setImageResamplingQuality(juce::Graphics::lowResamplingQuality);
-    g.drawImage(viewportImage, imageBounds.toFloat());
 }
