@@ -3,7 +3,7 @@
 <JUCERPROJECT id="DYoSUd" name="medusa" displaySplashScreen="0" reportAppUsage="0"
               splashScreenColour="Dark" projectType="guiapp" version="0.1.0"
               bundleIdentifier="com.lassandroan.medusa" includeBinaryInAppConfig="1"
-              cppLanguageStandard="11" jucerVersion="5.4.4" defines="DONT_SET_USING_JUCE_NAMESPACE=1"
+              cppLanguageStandard="11" jucerVersion="5.4.7" defines="DONT_SET_USING_JUCE_NAMESPACE=1"
               companyName="Antonio Lassandro" companyWebsite="https:://www.github.com/lassandroan/"
               companyEmail="lassandroan@gmail.com">
   <MAINGROUP id="xCl9fQ" name="medusa">
